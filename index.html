@@ -4,153 +4,234 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mohit Jadav - Mobile Developer Portfolio</title>
-    <!-- Custom Fonts: Manrope, Noto Sans -->
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-    <link
-      rel="stylesheet"
-      as="style"
-      onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
-    />
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Chosen Palette: Warm Neutrals with Subtle Blue Accents */
         body {
-            font-family: 'Manrope', "Noto Sans", sans-serif;
-            background-color: #171118; /* Dark background */
-            color: #f8fafc; /* Light text */
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light background - slate-50 */
+            color: #334155; /* Dark grey text - slate-700 */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #362839; /* Darker track */
+            background: #e2e8f0; /* Light blue-gray track */
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #d23df4; /* Purple accent */
+            background: #3b82f6; /* Blue-600 */
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #b22ee0; /* Darker purple on hover */
+            background: #2563eb; /* Blue-700 on hover */
         }
         /* Smooth scroll behavior */
         html {
             scroll-behavior: smooth;
         }
+        /* Hide scrollbar for slider container */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Custom styles for review slider to ensure proper snapping and overflow */
+        .review-slider-wrapper {
+            position: relative;
+        }
+        .review-slider {
+            display: flex;
+            overflow-x: hidden; /* Hide scrollbar */
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+        }
+        .review-card {
+            flex: 0 0 100%; /* Each card takes full width */
+            scroll-snap-align: center;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        .review-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            z-index: 10;
+        }
+        .review-nav-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-50%) scale(1.05);
+        }
+        .review-nav-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        .review-nav-btn.left {
+            left: -1.5rem; /* Adjust positioning */
+        }
+        .review-nav-btn.right {
+            right: -1.5rem; /* Adjust positioning */
+        }
+
+        /* Adjust button positioning for smaller screens */
+        @media (max-width: 768px) {
+            .review-nav-btn.left {
+                left: 0.5rem;
+            }
+            .review-nav-btn.right {
+                right: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
 
+    <!-- Application Structure Plan: This SPA is designed with a linear, scrollable structure, divided into distinct thematic sections (Home, About, Projects, Services, Reviews, Contact). This structure was chosen for its simplicity and ease of navigation, mirroring common portfolio site patterns but enhancing interactivity within each section. Users can smoothly scroll between sections or use the fixed navigation bar for quick jumps. Key interactions include:
+    - Hero section for immediate introduction and call-to-actions.
+    - About section for detailed professional background and skills presented as clear badges.
+    - Projects section uses a responsive grid with individual cards for quick overview and direct links to live apps.
+    - Services section uses a similar card-based grid to categorize offerings.
+    - Reviews section features an interactive slider for client testimonials, allowing users to browse feedback (manual and auto-play).
+    - Contact section provides a form and direct contact details.
+    This structure facilitates easy consumption by chunking information and makes it explorable through direct links and interactive components. -->
+
+    <!-- Visualization & Content Choices:
+    - **Home Section:** Introduces the developer with a large header, descriptive text, and calls-to-action. Goal: Inform/Engage. Presentation: Text, buttons, social icons. Interaction: Smooth scroll navigation. Justification: Standard hero section for quick user orientation and engagement.
+    - **About Section:** Presents developer's background, skills. Goal: Inform/Organize. Presentation: Text paragraphs, skill badges (HTML/CSS/Tailwind, Unicode icons). Interaction: CV download link. Justification: Clear categorization of skills for quick understanding, readable text for detailed background.
+    - **Projects Section:** Showcases mobile applications. Goal: Inform/Compare. Presentation: Project cards with image, title, description, technology tags, and external links (HTML/CSS/Tailwind). Interaction: Clickable links to app stores. Justification: Visual and concise representation of projects with direct access to live examples, allowing easy comparison.
+    - **Services Section:** Details services offered. Goal: Inform/Organize. Presentation: Service cards with icons, titles, and descriptions (HTML/CSS/Tailwind, Font Awesome icons). Interaction: N/A (informational). Justification: Clear breakdown of services in an easily digestible format.
+    - **Reviews Section:** Displays client testimonials. Goal: Inform/Engage. Presentation: Slider of review cards (HTML/CSS/Tailwind) with navigation buttons. Interaction: Manual next/previous review, auto-play. Justification: Provides social proof dynamically, making testimonials engaging and preventing a long static list. Uses pure JS for slider logic.
+    - **Contact Section:** Enables user to reach out. Goal: Inform/Engage. Presentation: Contact form, direct contact details (HTML/CSS/Tailwind, Font Awesome icons). Interaction: Form submission, direct email/WhatsApp links. Justification: Standard contact methods for accessibility.
+    - **Global Elements (Preloader, Scroll to Top):** Goal: Enhance UX. Presentation: HTML/CSS (preloader animation, button). Interaction: Automatic hide, click to scroll. Justification: Improves perceived loading performance and navigation convenience.
+
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 bg-white z-[9999] flex flex-col justify-center items-center">
+        <i class="fas fa-mobile-alt text-blue-600 text-6xl animate-bounce"></i>
+        <p class="mt-4 text-xl font-semibold text-gray-700">Loading Mohit Jadav's Portfolio...</p>
+    </div>
+
     <!-- Header / Navigation Bar -->
-    <header class="bg-[#171118] border-b border-solid border-b-[#362839] shadow-md py-4 px-6 md:px-12 fixed w-full z-50 rounded-b-lg">
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-40 rounded-b-lg">
         <nav class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white hover:text-[#d23df4] transition duration-300">Mohit Jadav</a>
+            <a href="#" class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition duration-300">Mohit Jadav</a>
 
             <!-- Desktop Navigation -->
             <ul class="hidden md:flex space-x-8">
-                <li><a href="#home" class="text-white hover:text-[#d23df4] font-medium transition duration-300">Home</a></li>
-                <li><a href="#about" class="text-white hover:text-[#d23df4] font-medium transition duration-300">About</a></li>
-                <li><a href="#portfolio" class="text-white hover:text-[#d23df4] font-medium transition duration-300">Projects</a></li>
-                <li><a href="#services" class="text-white hover:text-[#d23df4] font-medium transition duration-300">Services</a></li>
-                <li><a href="#reviews" class="text-white hover:text-[#d23df4] font-medium transition duration-300">Reviews</a></li>
-                <li><a href="#contact" class="text-white hover:text-[#d23df4] font-medium transition duration-300">Contact</a></li>
+                <li><a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Home</a></li>
+                <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">About</a></li>
+                <li><a href="#portfolio" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Projects</a></li>
+                <li><a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Services</a></li>
+                <li><a href="#reviews" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Reviews</a></li>
+                <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a></li>
             </ul>
 
             <!-- Mobile Hamburger Menu -->
             <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
                     <i class="fas fa-bars text-2xl"></i>
                 </button>
             </div>
         </nav>
 
         <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="hidden fixed inset-0 bg-[#171118] bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-8 md:hidden">
-            <button id="close-mobile-menu-button" class="absolute top-6 right-6 text-white focus:outline-none">
+        <div id="mobile-menu" class="hidden fixed inset-0 bg-white bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-8 md:hidden">
+            <button id="close-mobile-menu-button" class="absolute top-6 right-6 text-gray-700 focus:outline-none">
                 <i class="fas fa-times text-3xl"></i>
             </button>
             <ul class="text-center text-2xl space-y-6">
-                <li><a href="#home" class="text-white hover:text-[#d23df4] font-medium transition duration-300 mobile-nav-link">Home</a></li>
-                <li><a href="#about" class="text-white hover:text-[#d23df4] font-medium transition duration-300 mobile-nav-link">About</a></li>
-                <li><a href="#portfolio" class="text-white hover:text-[#d23df4] font-medium transition duration-300 mobile-nav-link">Projects</a></li>
-                <li><a href="#services" class="text-white hover:text-[#d23df4] font-medium transition duration-300 mobile-nav-link">Services</a></li>
-                <li><a href="#reviews" class="text-white hover:text-[#d23df4] font-medium transition duration-300 mobile-nav-link">Reviews</a></li>
-                <li><a href="#contact" class="text-white hover:text-[#d23df4] font-medium transition duration-300 mobile-nav-link">Contact</a></li>
+                <li><a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Home</a></li>
+                <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">About</a></li>
+                <li><a href="#portfolio" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Projects</a></li>
+                <li><a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Services</a></li>
+                <li><a href="#reviews" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Reviews</a></li>
+                <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Contact</a></li>
             </ul>
         </div>
     </header>
 
     <main>
         <!-- Hero Section -->
-        <section id="home" class="relative bg-[#171118] text-white py-24 md:py-32 flex items-center justify-center min-h-screen rounded-b-3xl">
+        <section id="home" class="relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-24 md:py-32 flex items-center justify-center min-h-screen rounded-b-3xl shadow-2xl shadow-blue-500/50">
             <div class="container mx-auto px-6 text-center z-10">
                 <div class="flex flex-col items-center">
-                    <img src="https://placehold.co/150x150/d23df4/171118?text=MJ" alt="Mohit Jadav Profile Picture" class="w-36 h-36 rounded-full border-4 border-[#d23df4] shadow-lg mb-6 object-cover">
+                    <i class="fas fa-mobile-alt text-white text-6xl mb-6"></i> <!-- Mobile Icon -->
                     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
                         Mobile Developer
                     </h1>
-                    <p class="text-xl md:text-2xl font-light mb-8 max-w-2xl text-[#b49cba]">
+                    <p class="text-xl md:text-2xl font-light mb-8 max-w-2xl text-gray-100">
                         I specialize in crafting beautiful and functional user interfaces with Flutter. Explore my portfolio to see how I bring ideas to life.
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="#portfolio" class="bg-[#d23df4] text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-[#b22ee0] transform hover:scale-105 transition duration-300 ease-in-out">
+                        <a href="#portfolio" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300 ease-in-out">
                             View Projects <i class="fas fa-arrow-right ml-2"></i>
                         </a>
-                        <a href="#contact" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-white hover:text-[#171118] transform hover:scale-105 transition duration-300 ease-in-out">
+                        <a href="#contact" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-white hover:text-blue-600 transform hover:scale-105 transition duration-300 ease-in-out">
                             Get in Touch <i class="fas fa-envelope ml-2"></i>
                         </a>
                     </div>
                 </div>
                 <!-- Social Media Icons -->
                 <div class="mt-12 flex justify-center space-x-6">
-                    <a href="https://github.com/mohitjadav86" target="_blank" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://stackoverflow.com/users/18340828/mohitjadav" target="_blank" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fab fa-stack-overflow"></i></a>
-                    <a href="https://pub.dev/packages/mohitjadav86" target="_blank" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fas fa-cube"></i></a>
-                    <a href="https://medium.com/@mohitjadav86" target="_blank" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fab fa-medium"></i></a>
-                    <a href="mailto:jadavmohit86@gmail.com" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fas fa-envelope"></i></a>
-                    <a href="https://wa.me/919724430736" target="_blank" class="text-[#b49cba] hover:text-white text-3xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://github.com/mohitjadav86" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://stackoverflow.com/users/18340828/mohitjadav" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-stack-overflow"></i></a>
+                    <a href="https://pub.dev/packages/mohitjadav86" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fas fa-cube"></i></a>
+                    <a href="https://medium.com/@mohitjadav86" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-medium"></i></a>
+                    <a href="mailto:jadavmohit86@gmail.com" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fas fa-envelope"></i></a>
+                    <a href="https://wa.me/919724430736" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
         </section>
 
         <!-- About Me Section -->
-        <section id="about" class="container mx-auto px-6 py-16 md:py-24 bg-[#201822] rounded-xl shadow-lg mt-8">
-            <h2 class="text-4xl font-bold text-center text-white mb-12">About Me</h2>
+        <section id="about" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">About Me</h2>
             <div class="flex flex-col items-center">
                 <div class="w-full">
-                    <p class="text-lg text-[#b49cba] leading-relaxed mb-6">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
                         Hello! I'm Mohit Jadav, a passionate mobile application developer with expertise in building robust and user-friendly experiences for Android, iOS, and cross-platform using Flutter. I love bringing ideas to life through clean code and intuitive design.
                     </p>
-                    <p class="text-lg text-[#b49cba] leading-relaxed mb-6">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
                         My journey in mobile development has equipped me with a strong understanding of native development principles (Kotlin for Android, Swift for iOS) and the efficiency of Flutter for rapid cross-platform deployment. I am committed to continuous learning and staying updated with the latest mobile technologies.
                     </p>
-                    <h3 class="text-2xl font-semibold text-white mb-4">Key Skills:</h3>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Skills:</h3>
                     <div class="flex flex-wrap gap-4 mb-8">
-                        <span class="bg-[#362839] text-white px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                        <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
                             <i class="fab fa-android mr-2"></i>Android (Kotlin/Java)
                         </span>
-                        <span class="bg-[#362839] text-white px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                        <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
                             <i class="fab fa-apple mr-2"></i>iOS (Swift/Objective-C)
                         </span>
-                        <span class="bg-[#362839] text-white px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                        <span class="bg-teal-100 text-teal-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
                             <i class="fas fa-mobile-alt mr-2"></i>Flutter (Dart)
                         </span>
-                        <span class="bg-[#362839] text-white px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                        <span class="bg-red-100 text-red-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
                             <i class="fas fa-database mr-2"></i>Firebase
                         </span>
-                        <span class="bg-[#362839] text-white px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                        <span class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
                             <i class="fas fa-cloud mr-2"></i>REST APIs
                         </span>
-                        <span class="bg-[#362839] text-white px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                        <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
                             <i class="fas fa-paint-brush mr-2"></i>UI/UX Design
                         </span>
                     </div>
-                    <a href="https://example.com/your-cv.pdf" target="_blank" class="inline-block bg-[#d23df4] text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-[#b22ee0] transform hover:scale-105 transition duration-300 ease-in-out">
+                    <a href="https://mohitjadav86.github.io/resume/MohitJadav_Flutter.pdf" target="_blank" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
                         Download CV <i class="fas fa-download ml-2"></i>
                     </a>
                 </div>
@@ -158,101 +239,101 @@
         </section>
 
         <!-- Portfolio Section -->
-        <section id="portfolio" class="bg-[#171118] px-6 py-16 md:py-24 rounded-t-3xl">
+        <section id="portfolio" class="bg-gray-50 px-6 py-16 md:py-24 rounded-t-3xl">
             <div class="container mx-auto">
-                <h2 class="text-4xl font-bold text-center text-white mb-12">My Projects</h2>
+                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Projects</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     <!-- Project Card 1: Kids Learn Hub -->
-                    <div class="bg-[#201822] rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/d23df4/171118?text=Kids+Learn+Hub" alt="Kids Learn Hub App" class="w-full h-56 object-cover">
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
+                        <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Kids+Learn+Hub" alt="Kids Learn Hub App" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-white mb-2">Kids Learn Hub</h3>
-                            <p class="text-[#b49cba] mb-4">An educational app designed to help kids learn through interactive activities.</p>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Kids Learn Hub</h3>
+                            <p class="text-gray-600 mb-4">An educational app designed to help kids learn through interactive activities.</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Educational</span>
+                                <span class="bg-teal-100 text-teal-800 text-xs px-3 py-1 rounded-full">Android</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Educational</span>
                             </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.kidslearnhub" target="_blank" class="text-[#d23df4] hover:text-[#b22ee0] font-medium flex items-center">
+                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.kidslearnhub" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                                 View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Project Card 2: Picture Puzzle -->
-                    <div class="bg-[#201822] rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/d23df4/171118?text=Picture+Puzzle" alt="Picture Puzzle App" class="w-full h-56 object-cover">
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
+                        <img src="https://placehold.co/600x400/fcd34d/ffffff?text=Picture+Puzzle" alt="Picture Puzzle App" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-white mb-2">Picture Puzzle</h3>
-                            <p class="text-[#b49cba] mb-4">A fun and engaging picture puzzle game for all ages.</p>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Picture Puzzle</h3>
+                            <p class="text-gray-600 mb-4">A fun and engaging picture puzzle game for all ages.</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Game</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
+                                <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Game</span>
                             </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.picturepuzzle" target="_blank" class="text-[#d23df4] hover:text-[#b22ee0] font-medium flex items-center">
+                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.picturepuzzle" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                                 View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Project Card 3: Fonts App -->
-                    <div class="bg-[#201822] rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/d23df4/171118?text=Fonts+App" alt="Fonts App" class="w-full h-56 object-cover">
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
+                        <img src="https://placehold.co/600x400/6ee7b7/ffffff?text=Fonts+App" alt="Fonts App" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-white mb-2">Fonts App</h3>
-                            <p class="text-[#b49cba] mb-4">An application providing a variety of fonts for creative use.</p>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Fonts App</h3>
+                            <p class="text-gray-600 mb-4">An application providing a variety of fonts for creative use.</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Utility</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
+                                <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">Utility</span>
                             </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.fonts.app.fontsapp" target="_blank" class="text-[#d23df4] hover:text-[#b22ee0] font-medium flex items-center">
+                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.fonts.app.fontsapp" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                                 View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Project Card 4: IPL 2020 -->
-                    <div class="bg-[#201822] rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/d23df4/171118?text=IPL+2020" alt="IPL 2020 App" class="w-full h-56 object-cover">
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
+                        <img src="https://placehold.co/600x400/93c5fd/ffffff?text=IPL+2020" alt="IPL 2020 App" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-white mb-2">IPL 2020</h3>
-                            <p class="text-[#b49cba] mb-4">An app dedicated to the Indian Premier League 2020 season.</p>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">IPL 2020</h3>
+                            <p class="text-gray-600 mb-4">An app dedicated to the Indian Premier League 2020 season.</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Sports</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
+                                <span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">Sports</span>
                             </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.ipl2020" target="_blank" class="text-[#d23df4] hover:text-[#b22ee0] font-medium flex items-center">
+                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.ipl2020" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                                 View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Project Card 5: Hanuman Chalisa -->
-                    <div class="bg-[#201822] rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/d23df4/171118?text=Hanuman+Chalisa" alt="Hanuman Chalisa App" class="w-full h-56 object-cover">
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
+                        <img src="https://placehold.co/600x400/fca5a5/ffffff?text=Hanuman+Chalisa" alt="Hanuman Chalisa App" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-white mb-2">Hanuman Chalisa</h3>
-                            <p class="text-[#b49cba] mb-4">A devotional app featuring the Hanuman Chalisa.</p>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Hanuman Chalisa</h3>
+                            <p class="text-gray-600 mb-4">A devotional app featuring the Hanuman Chalisa.</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Devotional</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
+                                <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Devotional</span>
                             </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.kingkobra.hanumanchalisa" target="_blank" class="text-[#d23df4] hover:text-[#b22ee0] font-medium flex items-center">
+                            <a href="https://play.google.com/store/apps/details?id=com.kingkobra.hanumanchalisa" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                                 View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Project Card 6: My Application (Placeholder) -->
-                    <div class="bg-[#201822] rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/d23df4/171118?text=My+Application" alt="My Application" class="w-full h-56 object-cover">
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
+                        <img src="https://placehold.co/600x400/c4b5fd/ffffff?text=My+Application" alt="My Application" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-white mb-2">My Application</h3>
-                            <p class="text-[#b49cba] mb-4">A general purpose application, showcasing various mobile development features.</p>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">My Application</h3>
+                            <p class="text-gray-600 mb-4">A general purpose application, showcasing various mobile development features.</p>
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-[#362839] text-white text-xs px-3 py-1 rounded-full">Utility</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full">Utility</span>
                             </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.kingkobra.myapplication" target="_blank" class="text-[#d23df4] hover:text-[#b22ee0] font-medium flex items-center">
+                            <a href="https://play.google.com/store/apps/details?id=com.kingkobra.myapplication" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                                 View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                             </a>
                         </div>
@@ -260,7 +341,7 @@
                 </div>
                 <!-- Button to view all apps -->
                 <div class="text-center mt-12">
-                    <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="inline-block bg-[#d23df4] text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-[#b22ee0] transform hover:scale-105 transition duration-300 ease-in-out">
+                    <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="inline-block bg-blue-600 text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
                         View All My Apps on Google Play <i class="fab fa-google-play ml-2"></i>
                     </a>
                 </div>
@@ -268,71 +349,71 @@
         </section>
 
         <!-- Services Section -->
-        <section id="services" class="container mx-auto px-6 py-16 md:py-24 bg-[#201822] rounded-xl shadow-lg mt-8">
-            <h2 class="text-4xl font-bold text-center text-white mb-12">My Services</h2>
+        <section id="services" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Services</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Service Card 1 -->
-                <div class="bg-[#362839] rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
-                    <div class="text-[#d23df4] mb-6">
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-blue-600 mb-6">
                         <i class="fas fa-mobile-alt text-5xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-white mb-3">Custom Mobile App Development</h3>
-                    <p class="text-[#b49cba] leading-relaxed">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">Custom Mobile App Development</h3>
+                    <p class="text-gray-600 leading-relaxed">
                         Building bespoke Android, iOS, and cross-platform (Flutter) applications from concept to deployment, tailored to your unique business needs.
                     </p>
                 </div>
 
                 <!-- Service Card 2 -->
-                <div class="bg-[#362839] rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
-                    <div class="text-[#d23df4] mb-6">
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-blue-600 mb-6">
                         <i class="fas fa-palette text-5xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-white mb-3">UI/UX Design & Prototyping</h3>
-                    <p class="text-[#b49cba] leading-relaxed">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">UI/UX Design & Prototyping</h3>
+                    <p class="text-gray-600 leading-relaxed">
                         Creating intuitive, engaging, and visually appealing user interfaces and experiences, ensuring a delightful journey for your app users.
                     </p>
                 </div>
 
                 <!-- Service Card 3 -->
-                <div class="bg-[#362839] rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
-                    <div class="text-[#d23df4] mb-6">
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-blue-600 mb-6">
                         <i class="fas fa-code-branch text-5xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-white mb-3">App Maintenance & Optimization</h3>
-                    <p class="text-[#b49cba] leading-relaxed">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">App Maintenance & Optimization</h3>
+                    <p class="text-gray-600 leading-relaxed">
                         Providing ongoing support, performance optimization, bug fixing, and feature enhancements to keep your applications running smoothly.
                     </p>
                 </div>
 
                 <!-- Service Card 4 -->
-                <div class="bg-[#362839] rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
-                    <div class="text-[#d23df4] mb-6">
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-blue-600 mb-6">
                         <i class="fas fa-sync-alt text-5xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-white mb-3">Legacy App Modernization</h3>
-                    <p class="text-[#b49cba] leading-relaxed">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">Legacy App Modernization</h3>
+                    <p class="text-gray-600 leading-relaxed">
                         Updating and migrating older mobile applications to modern frameworks like Flutter or the latest native versions for improved performance.
                     </p>
                 </div>
 
                 <!-- Service Card 5 -->
-                <div class="bg-[#362839] rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
-                    <div class="text-[#d23df4] mb-6">
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-blue-600 mb-6">
                         <i class="fas fa-cloud-upload-alt text-5xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-white mb-3">API Integration & Backend Support</h3>
-                    <p class="text-[#b49cba] leading-relaxed">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">API Integration & Backend Support</h3>
+                    <p class="text-gray-600 leading-relaxed">
                         Seamless integration with various APIs and providing robust backend support using technologies like Firebase for scalable applications.
                     </p>
                 </div>
 
                 <!-- Service Card 6 -->
-                <div class="bg-[#362839] rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
-                    <div class="text-[#d23df4] mb-6">
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-blue-600 mb-6">
                         <i class="fas fa-chalkboard-teacher text-5xl"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold text-white mb-3">Technical Consultation</h3>
-                    <p class="text-[#b49cba] leading-relaxed">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">Technical Consultation</h3>
+                    <p class="text-gray-600 leading-relaxed">
                         Offering expert advice on mobile technology stack, architecture, and best practices to guide your project's success.
                     </p>
                 </div>
@@ -340,61 +421,110 @@
         </section>
 
         <!-- Reviews Section -->
-        <section id="reviews" class="bg-[#171118] px-6 py-16 md:py-24 rounded-t-3xl">
-            <div class="container mx-auto">
-                <h2 class="text-4xl font-bold text-center text-white mb-12">Client Reviews</h2>
-                <div class="max-w-3xl mx-auto bg-[#201822] p-8 md:p-12 rounded-xl shadow-lg text-center">
-                    <div class="mb-6">
-                        <i class="fas fa-quote-left text-[#d23df4] text-3xl mb-4"></i>
-                        <p class="text-xl text-[#b49cba] italic leading-relaxed">
-                            "Mohit delivered exceptional work on our attendance management app. His attention to detail, technical expertise, and responsiveness were truly impressive. He's a highly skilled developer who understood our requirements perfectly and brought our vision to life."
-                        </p>
-                        <i class="fas fa-quote-right text-[#d23df4] text-3xl mt-4"></i>
+        <section id="reviews" class="bg-gray-50 px-6 py-16 md:py-24 rounded-t-3xl">
+            <div class="container mx-auto relative">
+                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Client Reviews</h2>
+                <div class="review-slider-wrapper max-w-3xl mx-auto">
+                    <!-- Slider Container -->
+                    <div id="review-slider" class="review-slider rounded-xl shadow-lg">
+                        <!-- Review Card 1 -->
+                        <div class="review-card bg-white p-8 md:p-12 text-center">
+                            <div class="mb-6">
+                                <i class="fas fa-quote-left text-blue-400 text-3xl mb-4"></i>
+                                <p class="text-xl text-gray-700 italic leading-relaxed">
+                                    "Mohit delivered exceptional work on our attendance management app. His attention to detail, technical expertise, and responsiveness were truly impressive. He's a highly skilled developer who understood our requirements perfectly and brought our vision to life."
+                                </p>
+                                <i class="fas fa-quote-right text-blue-400 text-3xl mt-4"></i>
+                            </div>
+                            <div class="mt-8">
+                                <p class="text-lg font-semibold text-blue-600">- Mohit Jadav</p>
+                                <p class="text-md text-gray-600">Developer, Prowin Attendance App</p>
+                                <a href="https://www.freelancer.in/u/bagiyachirag587" target="_blank" class="inline-block mt-4 text-blue-600 hover:underline font-medium">
+                                    View Chirag Bagia's Freelancer Profile <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Review Card 2 (Example - Add more as needed) -->
+                        <div class="review-card bg-white p-8 md:p-12 text-center">
+                            <div class="mb-6">
+                                <i class="fas fa-quote-left text-blue-400 text-3xl mb-4"></i>
+                                <p class="text-xl text-gray-700 italic leading-relaxed">
+                                    "Mohit is an excellent mobile developer. He quickly grasped our complex requirements and delivered a high-quality application on time and within budget. Highly recommend his services!"
+                                </p>
+                                <i class="fas fa-quote-right text-blue-400 text-3xl mt-4"></i>
+                            </div>
+                            <div class="mt-8">
+                                <p class="text-lg font-semibold text-blue-600">- Another Satisfied Client</p>
+                                <p class="text-md text-gray-600">CEO, Tech Solutions Inc.</p>
+                                <a href="#" target="_blank" class="inline-block mt-4 text-blue-600 hover:underline font-medium">
+                                    Learn More <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Review Card 3 (Example - Add more as needed) -->
+                        <div class="review-card bg-white p-8 md:p-12 text-center">
+                            <div class="mb-6">
+                                <i class="fas fa-quote-left text-blue-400 text-3xl mb-4"></i>
+                                <p class="text-xl text-gray-700 italic leading-relaxed">
+                                    "Working with Mohit was a pleasure. His expertise in Flutter allowed us to launch our app quickly and efficiently. The performance and design are top-notch!"
+                                </p>
+                                <i class="fas fa-quote-right text-blue-400 text-3xl mt-4"></i>
+                            </div>
+                            <div class="mt-8">
+                                <p class="text-lg font-semibold text-blue-600">- Happy Business Owner</p>
+                                <p class="text-md text-gray-600">Founder, Innovate Apps</p>
+                                <a href="#" target="_blank" class="inline-block mt-4 text-blue-600 hover:underline font-medium">
+                                    View Project <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-8">
-                        <p class="text-lg font-semibold text-white">- Chirag Bagia</p>
-                        <p class="text-md text-[#b49cba]">Client, Prowin Attendance App</p>
-                        <a href="https://www.freelancer.in/u/bagiyachirag587" target="_blank" class="inline-block mt-4 text-[#d23df4] hover:underline font-medium">
-                            View Chirag Bagia's Freelancer Profile <i class="fas fa-external-link-alt ml-1 text-sm"></i>
-                        </a>
-                    </div>
+
+                    <!-- Slider Navigation Buttons -->
+                    <button id="prev-review" class="review-nav-btn left">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="next-review" class="review-nav-btn right">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
-                <!-- You can add more review cards here if needed -->
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="bg-[#201822] px-6 py-16 md:py-24 rounded-t-3xl">
+        <section id="contact" class="bg-blue-50 px-6 py-16 md:py-24 rounded-t-3xl">
             <div class="container mx-auto">
-                <h2 class="text-4xl font-bold text-center text-white mb-12">Get in Touch</h2>
-                <div class="max-w-3xl mx-auto bg-[#362839] p-8 md:p-12 rounded-xl shadow-lg">
+                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Get in Touch</h2>
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg">
                     <form action="#" method="POST" class="space-y-6">
                         <div>
-                            <label for="name" class="block text-white text-lg font-medium mb-2">Name</label>
-                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-[#4b3b4d] bg-[#171118] text-white rounded-lg focus:ring-[#d23df4] focus:border-[#d23df4] text-lg" placeholder="Your Name" required>
+                            <label for="name" class="block text-gray-700 text-lg font-medium mb-2">Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Your Name" required>
                         </div>
                         <div>
-                            <label for="email" class="block text-white text-lg font-medium mb-2">Email</label>
-                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-[#4b3b4d] bg-[#171118] text-white rounded-lg focus:ring-[#d23df4] focus:border-[#d23df4] text-lg" placeholder="your.email@example.com" required>
+                            <label for="email" class="block text-gray-700 text-lg font-medium mb-2">Email</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="your.email@example.com" required>
                         </div>
                         <div>
-                            <label for="subject" class="block text-white text-lg font-medium mb-2">Subject</label>
-                            <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-[#4b3b4d] bg-[#171118] text-white rounded-lg focus:ring-[#d23df4] focus:border-[#d23df4] text-lg" placeholder="Project Inquiry, Collaboration, etc." required>
+                            <label for="subject" class="block text-gray-700 text-lg font-medium mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Project Inquiry, Collaboration, etc." required>
                         </div>
                         <div>
-                            <label for="message" class="block text-white text-lg font-medium mb-2">Message</label>
-                            <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-[#4b3b4d] bg-[#171118] text-white rounded-lg focus:ring-[#d23df4] focus:border-[#d23df4] text-lg" placeholder="Tell me about your project or inquiry..." required></textarea>
+                            <label for="message" class="block text-gray-700 text-lg font-medium mb-2">Message</label>
+                            <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Tell me about your project or inquiry..." required></textarea>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="bg-[#d23df4] text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-[#b22ee0] transform hover:scale-105 transition duration-300 ease-in-out">
+                            <button type="submit" class="bg-blue-600 text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
                                 Send Message <i class="fas fa-paper-plane ml-2"></i>
                             </button>
                         </div>
                     </form>
-                    <div class="mt-10 text-center text-white">
+                    <div class="mt-10 text-center text-gray-700">
                         <p class="text-lg mb-2">Prefer to connect directly?</p>
-                        <p class="text-xl font-semibold mb-2"><i class="fas fa-envelope mr-2 text-[#d23df4]"></i> <a href="mailto:jadavmohit86@gmail.com" class="text-[#d23df4] hover:underline">jadavmohit86@gmail.com</a></p>
-                        <p class="text-xl font-semibold"><i class="fab fa-whatsapp mr-2 text-[#d23df4]"></i> <a href="https://wa.me/919724430736" target="_blank" class="text-[#d23df4] hover:underline">+91 9724430736</a></p>
+                        <p class="text-xl font-semibold mb-2"><i class="fas fa-envelope mr-2"></i> <a href="mailto:jadavmohit86@gmail.com" class="text-blue-600 hover:underline">jadavmohit86@gmail.com</a></p>
+                        <p class="text-xl font-semibold"><i class="fab fa-whatsapp mr-2"></i> <a href="https://wa.me/919724430736" target="_blank" class="text-blue-600 hover:underline">+91 9724430736</a></p>
                     </div>
                 </div>
             </div>
@@ -402,39 +532,50 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#171118] text-white py-8 px-6 text-center rounded-t-lg">
+    <footer class="bg-gray-800 text-white py-8 px-6 text-center rounded-t-lg">
         <div class="container mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6">
                 <div class="mb-4 md:mb-0">
-                    <a href="#" class="text-2xl font-bold text-white hover:text-[#d23df4] transition duration-300">Mohit Jadav</a>
+                    <a href="#" class="text-2xl font-bold text-white hover:text-gray-300 transition duration-300">Mohit Jadav</a>
                 </div>
                 <ul class="flex space-x-6">
-                    <li><a href="#about" class="text-[#b49cba] hover:text-white transition duration-300">About</a></li>
-                    <li><a href="#portfolio" class="text-[#b49cba] hover:text-white transition duration-300">Projects</a></li>
-                    <li><a href="#services" class="text-[#b49cba] hover:text-white transition duration-300">Services</a></li>
-                    <li><a href="#reviews" class="text-[#b49cba] hover:text-white transition duration-300">Reviews</a></li>
-                    <li><a href="#contact" class="text-[#b49cba] hover:text-white transition duration-300">Contact</a></li>
+                    <li><a href="#about" class="text-gray-300 hover:text-white transition duration-300">About</a></li>
+                    <li><a href="#portfolio" class="text-gray-300 hover:text-white transition duration-300">Projects</a></li>
+                    <li><a href="#services" class="text-gray-300 hover:text-white transition duration-300">Services</a></li>
+                    <li><a href="#reviews" class="text-gray-300 hover:text-white transition duration-300">Reviews</a></li>
+                    <li><a href="#contact" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
                 </ul>
             </div>
             <div class="flex justify-center space-x-6 mb-6">
-                <a href="https://github.com/mohitjadav86" target="_blank" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fab fa-linkedin"></i></a>
-                <a href="https://stackoverflow.com/users/18340828/mohitjadav" target="_blank" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fab fa-stack-overflow"></i></a>
-                <a href="https://pub.dev/packages/mohitjadav86" target="_blank" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fas fa-cube"></i></a>
-                <a href="https://medium.com/@mohitjadav86" target="_blank" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fab fa-medium"></i></a>
-                <a href="mailto:jadavmohit86@gmail.com" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fas fa-envelope"></i></a>
-                <a href="https://wa.me/919724430736" target="_blank" class="text-[#b49cba] hover:text-white text-2xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://github.com/mohitjadav86" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-linkedin"></i></a>
+                <a href="https://stackoverflow.com/users/18340828/mohitjadav" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-stack-overflow"></i></a>
+                <a href="https://pub.dev/packages/mohitjadav86" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fas fa-cube"></i></a>
+                <a href="https://medium.com/@mohitjadav86" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-medium"></i></a>
+                <a href="mailto:jadavmohit86@gmail.com" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fas fa-envelope"></i></a>
+                <a href="https://wa.me/919724430736" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <p class="text-[#b49cba] text-sm">&copy; 2025 Mohit Jadav. All rights reserved.</p>
+            <p class="text-gray-400 text-sm">&copy; 2025 Mohit Jadav. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn" class="fixed bottom-8 right-8 bg-[#d23df4] text-white p-4 rounded-full shadow-lg hover:bg-[#b22ee0] transition duration-300 ease-in-out z-50">
+    <button id="scrollToTopBtn" class="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out z-50">
         <i class="fas fa-arrow-up text-xl"></i>
     </button>
 
     <script>
+        // JavaScript for Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.classList.add('opacity-0'); // Start fade out
+                preloader.addEventListener('transitionend', () => {
+                    preloader.style.display = 'none'; // Hide after transition
+                }, { once: true }); // Ensure listener runs only once
+            }
+        });
+
         // JavaScript for Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const closeMobileMenuButton = document.getElementById('close-mobile-menu-button');
@@ -473,6 +614,72 @@
                 behavior: 'smooth'
             });
         });
+
+        // JavaScript for Reviews Slider
+        const reviewSlider = document.getElementById('review-slider');
+        const prevReviewBtn = document.getElementById('prev-review');
+        const nextReviewBtn = document.getElementById('next-review');
+        const reviewCards = reviewSlider.querySelectorAll('.review-card');
+
+        let currentIndex = 0;
+        const autoPlayInterval = 5000; // 5 seconds
+        let autoPlayTimer;
+
+        // Function to show a specific review
+        function showReview(index) {
+            if (index >= reviewCards.length) {
+                currentIndex = 0;
+            } else if (index < 0) {
+                currentIndex = reviewCards.length - 1;
+            } else {
+                currentIndex = index;
+            }
+            reviewSlider.scrollTo({
+                left: reviewCards[currentIndex].offsetWidth * currentIndex,
+                behavior: 'smooth'
+            });
+        }
+
+        // Function to start auto-play
+        function startAutoPlay() {
+            autoPlayTimer = setInterval(nextReview, autoPlayInterval);
+        }
+
+        // Function to stop auto-play
+        function stopAutoPlay() {
+            clearInterval(autoPlayTimer);
+        }
+
+        // Function to show the next review
+        function nextReview() {
+            showReview(currentIndex + 1);
+        }
+
+        // Function to show the previous review
+        function prevReview() {
+            showReview(currentIndex - 1);
+        }
+
+        // Event listeners for navigation buttons
+        nextReviewBtn.addEventListener('click', () => {
+            stopAutoPlay(); // Stop auto-play on manual interaction
+            nextReview();
+            startAutoPlay(); // Restart auto-play after a short delay
+        });
+
+        prevReviewBtn.addEventListener('click', () => {
+            stopAutoPlay(); // Stop auto-play on manual interaction
+            prevReview();
+            startAutoPlay(); // Restart auto-play after a short delay
+        });
+
+        // Pause auto-play on user interaction (hover)
+        reviewSlider.addEventListener('mouseover', stopAutoPlay);
+        reviewSlider.addEventListener('mouseleave', startAutoPlay);
+
+        // Initialize slider and start auto-play
+        showReview(0);
+        startAutoPlay();
     </script>
 </body>
 </html>
