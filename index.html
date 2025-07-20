@@ -11,6 +11,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Universal box-sizing for consistent layout */
+        *, ::before, ::after {
+            box-sizing: border-box;
+        }
+
         /* Chosen Palette: Warm Neutrals with Subtle Blue Accents */
         body {
             font-family: 'Inter', sans-serif;
@@ -95,29 +100,241 @@
             visibility: hidden;
             pointer-events: none; /* Ensure clicks pass through when fading out */
         }
+
+        /* Header initial state (transparent) */
+        header {
+            background-color: transparent;
+            box-shadow: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        /* Header scrolled state */
+        header.header-scrolled {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Tailwind shadow-md */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* Safari support */
+        }
+
+        /* Adjust content padding to prevent it from being hidden by fixed header */
+        main {
+            padding-top: 0; /* Removed initial padding, hero section handles it */
+        }
+        /* No specific padding-top for main, as hero section covers initial viewport */
+
+        /* Modal styles (kept for static apps section, but not for AI idea generator) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            inset: 0; /* Ensures it covers the entire viewport */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            display: flex; /* Use flex to center content */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            padding: 1rem; /* Add padding to prevent content from touching edges on small screens */
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            width: 90%;
+            max-width: 600px;
+            position: relative; /* For positioning the close button */
+            display: flex; /* Use flex for internal layout */
+            flex-direction: column; /* Stack children vertically */
+            gap: 1.5rem; /* Consistent spacing between major elements */
+            min-height: 250px; /* Prevent modal from collapsing too much */
+            max-height: 90vh; /* Limit modal height to viewport */
+            overflow-y: auto; /* Enable scrolling within modal if content is too long */
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0.5rem; /* Increase touch target */
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Styling for loading indicator */
+        #loadingIndicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.125rem; /* text-lg */
+            color: #3b82f6; /* blue-600 */
+        }
+
+        /* Custom styles for buttons with more flair */
+        .btn-primary {
+            background-image: linear-gradient(to right, #3b82f6 0%, #6366f1 100%); /* Blue to Indigo gradient */
+            transition: all 0.3s ease;
+            background-size: 200% auto; /* For hover effect */
+        }
+        .btn-primary:hover {
+            background-position: right center; /* Move gradient on hover */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+            transform: translateY(-2px) scale(1.02); /* Slight lift and scale */
+        }
+        .btn-secondary {
+            border: 2px solid white;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: white;
+            color: #3b82f6; /* Change text to blue on hover */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Card hover effects */
+        .project-card, .service-card {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .project-card:hover, .service-card:hover {
+            transform: translateY(-8px); /* Lift effect */
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15); /* Stronger shadow */
+        }
+
+        /* Hero section SVG background animation */
+        .hero-svg-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0; /* Behind content */
+            /* Add transform for parallax effect */
+            transform: translateZ(0); /* Ensure hardware acceleration */
+        }
+        .hero-svg-bg svg {
+            width: 100%;
+            height: 100%;
+            transform-origin: center center;
+            animation: moveSvg 20s infinite alternate ease-in-out; /* Slow, subtle movement */
+        }
+        .hero-svg-bg circle {
+            opacity: 0.1;
+            animation: fadeAndScale 15s infinite ease-in-out;
+        }
+        .hero-svg-bg circle:nth-child(2) { animation-delay: 2s; }
+        .hero-svg-bg circle:nth-child(3) { animation-delay: 4s; }
+        .hero-svg-bg circle:nth-child(4) { animation-delay: 6s; }
+
+        @keyframes moveSvg {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.05) translate(5%, 5%); }
+        }
+
+        @keyframes fadeAndScale {
+            0% { opacity: 0.1; transform: scale(0.8); }
+            50% { opacity: 0.25; transform: scale(1.1); }
+            100% { opacity: 0.1; transform: scale(0.8); }
+        }
+
+        /* Styling for My Journey section - Timeline */
+        .timeline-container {
+            padding-left: 2rem; /* Space for the vertical line */
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: calc(1rem - 2px); /* Position the line in the middle of the marker */
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #3b82f6; /* Blue line */
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem; /* Space for marker and content */
+            margin-bottom: 2rem; /* Spacing between items */
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0; /* No bottom margin for the last item */
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: calc(1rem - 10px); /* Position the marker on the line */
+            top: 0.75rem; /* Vertically align with content */
+            width: 20px;
+            height: 20px;
+            background-color: #3b82f6; /* Blue marker */
+            border: 3px solid #ffffff; /* White border for contrast */
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Subtle glow */
+            z-index: 1; /* Ensure marker is above the line */
+        }
+
+        .timeline-content {
+            flex-grow: 1;
+            background-color: #f0f4f8; /* Light blue-gray */
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-content h4 {
+            font-weight: 600; /* semibold */
+            color: #1e293b; /* slate-900 */
+        }
+
+        .timeline-content p {
+            color: #475569; /* slate-600 */
+        }
+
+        .timeline-content .duration {
+            font-size: 0.875rem; /* text-sm */
+            color: #64748b; /* slate-500 */
+            margin-top: 0.25rem;
+        }
+
+        /* Adjust for smaller screens if needed, though the flex-column and max-width should handle it */
+        @media (max-width: 768px) {
+            .timeline-container {
+                padding-left: 1.5rem; /* Adjust padding for smaller screens */
+            }
+            .timeline-container::before {
+                left: calc(0.75rem - 2px); /* Adjust line position */
+            }
+            .timeline-item {
+                padding-left: 2rem; /* Adjust item padding */
+            }
+            .timeline-marker {
+                left: calc(0.75rem - 10px); /* Adjust marker position */
+                top: 0.5rem; /* Adjust marker vertical alignment */
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
-
-    <!-- Application Structure Plan: This SPA is designed with a linear, scrollable structure, divided into distinct thematic sections (Home, About, Projects, Services, Reviews, Contact). This structure was chosen for its simplicity and ease of navigation, mirroring common portfolio site patterns but enhancing interactivity within each section. Users can smoothly scroll between sections or use the fixed navigation bar for quick jumps. Key interactions include:
-    - Hero section for immediate introduction and call-to-actions.
-    - About section for detailed professional background and skills presented as clear badges.
-    - Projects section uses a responsive grid with individual cards for quick overview and direct links to live apps.
-    - Services section uses a similar card-based grid to categorize offerings.
-    - Reviews section features an interactive slider for client testimonials, allowing users to browse feedback (manual and auto-play).
-    - Contact section provides a form and direct contact details.
-    This structure facilitates easy consumption by chunking information and makes it explorable through direct links and interactive components. -->
-
-    <!-- Visualization & Content Choices:
-    - **Home Section:** Introduces the developer with a large header, descriptive text, and calls-to-action. Goal: Inform/Engage. Presentation: Text, buttons, social icons. Interaction: Smooth scroll navigation. Justification: Standard hero section for quick user orientation and engagement.
-    - **About Section:** Presents developer's background, skills. Goal: Inform/Organize. Presentation: Text paragraphs, skill badges (HTML/CSS/Tailwind, Unicode icons). Interaction: CV download link. Justification: Clear categorization of skills for quick understanding, readable text for detailed background.
-    - **Projects Section:** Showcases mobile applications. Goal: Inform/Compare. Presentation: Project cards with image, title, description, technology tags, and external links (HTML/CSS/Tailwind). Interaction: Clickable links to app stores. Justification: Visual and concise representation of projects with direct access to live examples, allowing easy comparison.
-    - **Services Section:** Details services offered. Goal: Inform/Organize. Presentation: Service cards with icons, titles, and descriptions (HTML/CSS/Tailwind, Font Awesome icons). Interaction: N/A (informational). Justification: Clear breakdown of services in an easily digestible format.
-    - **Reviews Section:** Displays client testimonials. Goal: Inform/Engage. Presentation: Slider of review cards (HTML/CSS/Tailwind) with navigation buttons. Interaction: Manual next/previous review, auto-play. Justification: Provides social proof dynamically, making testimonials engaging and preventing a long static list. Uses pure JS for slider logic.
-    - **Contact Section:** Enables user to reach out. Goal: Inform/Engage. Presentation: Contact form, direct contact details (HTML/CSS/Tailwind, Font Awesome icons). Interaction: Form submission, direct email/WhatsApp links. Justification: Standard contact methods for accessibility.
-    - **Global Elements (Preloader, Scroll to Top):** Goal: Enhance UX. Presentation: HTML/CSS (preloader animation, button). Interaction: Automatic hide, click to scroll. Justification: Improves perceived loading performance and navigation convenience.
-
-    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
     <!-- Preloader -->
     <div id="preloader" class="fixed inset-0 bg-white z-[9999] flex flex-col justify-center items-center">
@@ -126,23 +343,24 @@
     </div>
 
     <!-- Header / Navigation Bar -->
-    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-40 rounded-b-lg">
-        <nav class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition duration-300">Mohit Jadav</a>
+    <header id="main-header" class="fixed w-full z-40 rounded-b-lg">
+        <nav class="container mx-auto flex justify-between items-center py-4 px-6 md:px-12">
+            <a id="site-logo" href="#" class="text-2xl font-bold text-white transition duration-300">Mohit Jadav</a>
 
             <!-- Desktop Navigation -->
             <ul class="hidden md:flex space-x-8">
-                <li><a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Home</a></li>
-                <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">About</a></li>
-                <li><a href="#portfolio" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Projects</a></li>
-                <li><a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Services</a></li>
-                <li><a href="#reviews" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Reviews</a></li>
-                <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a></li>
+                <li><a href="#home" class="nav-link text-white font-medium transition duration-300">Home</a></li>
+                <li><a href="#about" class="nav-link text-white font-medium transition duration-300">About</a></li>
+                <li><a href="#portfolio" class="nav-link text-white font-medium transition duration-300">Projects</a></li>
+                <li><a href="#my-journey" class="nav-link text-white font-medium transition duration-300">My Journey</a></li>
+                <li><a href="#services" class="nav-link text-white font-medium transition duration-300">Services</a></li>
+                <li><a href="#reviews" class="nav-link text-white font-medium transition duration-300">Reviews</a></li>
+                <li><a href="#contact" class="nav-link text-white font-medium transition duration-300">Contact</a></li>
             </ul>
 
             <!-- Mobile Hamburger Menu -->
             <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                <button id="mobile-menu-button" class="text-white focus:outline-none transition duration-300">
                     <i class="fas fa-bars text-2xl"></i>
                 </button>
             </div>
@@ -157,6 +375,7 @@
                 <li><a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Home</a></li>
                 <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">About</a></li>
                 <li><a href="#portfolio" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Projects</a></li>
+                <li><a href="#my-journey" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">My Journey</a></li>
                 <li><a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Services</a></li>
                 <li><a href="#reviews" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Reviews</a></li>
                 <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Contact</a></li>
@@ -167,9 +386,18 @@
     <main>
         <!-- Hero Section -->
         <section id="home" class="relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-24 md:py-32 flex items-center justify-center min-h-screen rounded-b-3xl shadow-2xl shadow-blue-500/50">
+            <!-- Animated SVG Background -->
+            <div class="hero-svg-bg">
+                <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
+                    <circle cx="200" cy="150" r="80" fill="#ffffff" />
+                    <circle cx="1200" cy="300" r="120" fill="#ffffff" />
+                    <circle cx="500" cy="600" r="100" fill="#ffffff" />
+                    <circle cx="900" cy="100" r="60" fill="#ffffff" />
+                </svg>
+            </div>
             <div class="container mx-auto px-6 text-center z-10">
                 <div class="flex flex-col items-center">
-                    <i class="fas fa-mobile-alt text-white text-6xl mb-6"></i> <!-- Mobile Icon -->
+                    <i class="fas fa-mobile-alt text-white text-6xl mb-6 animate-pulse"></i> <!-- Mobile Icon with pulse -->
                     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
                         Mobile Developer
                     </h1>
@@ -177,10 +405,10 @@
                         I specialize in crafting beautiful and functional user interfaces with Flutter. Explore my portfolio to see how I bring ideas to life.
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="#portfolio" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <a href="#portfolio" class="btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
                             View Projects <i class="fas fa-arrow-right ml-2"></i>
                         </a>
-                        <a href="#contact" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-white hover:text-blue-600 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <a href="#contact" class="btn-secondary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
                             Get in Touch <i class="fas fa-envelope ml-2"></i>
                         </a>
                     </div>
@@ -236,7 +464,7 @@
                             <i class="fab fa-git-alt mr-2"></i>Git & GitHub Actions (version control & CI/CD)
                         </span>
                     </div>
-                    <a href="https://mohitjadav86.github.io/resume/MohitJadav_Flutter.pdf" target="_blank" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
+                    <a href="https://mohitjadav86.github.io/resume/MohitJadav_Flutter.pdf" target="_blank" class="inline-block btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
                         Download CV <i class="fas fa-download ml-2"></i>
                     </a>
                 </div>
@@ -249,8 +477,8 @@
                 <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Projects</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                     <!-- Project Card 1: Kids Learn Hub -->
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Kids+Learn+Hub" alt="Kids Learn Hub App" class="w-full h-56 object-cover">
+                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
+                        <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Kids+Learn+Hub" alt="Kids Learn Hub App" class="w-full h-56 object-cover" loading="lazy">
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-2">Kids Learn Hub</h3>
                             <p class="text-gray-600 mb-4">An educational app designed to help kids learn through interactive activities.</p>
@@ -265,8 +493,8 @@
                     </div>
 
                     <!-- Project Card 2: Picture Puzzle -->
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/fcd34d/ffffff?text=Picture+Puzzle" alt="Picture Puzzle App" class="w-full h-56 object-cover">
+                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
+                        <img src="https://placehold.co/600x400/fcd34d/ffffff?text=Picture+Puzzle" alt="Picture Puzzle App" class="w-full h-56 object-cover" loading="lazy">
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-2">Picture Puzzle</h3>
                             <p class="text-gray-600 mb-4">A fun and engaging picture puzzle game for all ages.</p>
@@ -281,8 +509,8 @@
                     </div>
 
                     <!-- Project Card 3: Fonts App -->
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/6ee7b7/ffffff?text=Fonts+App" alt="Fonts App" class="w-full h-56 object-cover">
+                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
+                        <img src="https://placehold.co/600x400/6ee7b7/ffffff?text=Fonts+App" alt="Fonts App" class="w-full h-56 object-cover" loading="lazy">
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-2">Fonts App</h3>
                             <p class="text-gray-600 mb-4">An application providing a variety of fonts for creative use.</p>
@@ -297,8 +525,8 @@
                     </div>
 
                     <!-- Project Card 4: IPL 2020 -->
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/93c5fd/ffffff?text=IPL+2020" alt="IPL 2020 App" class="w-full h-56 object-cover">
+                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
+                        <img src="https://placehold.co/600x400/93c5fd/ffffff?text=IPL+2020" alt="IPL 2020 App" class="w-full h-56 object-cover" loading="lazy">
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-2">IPL 2020</h3>
                             <p class="text-gray-600 mb-4">An app dedicated to the Indian Premier League 2020 season.</p>
@@ -313,8 +541,8 @@
                     </div>
 
                     <!-- Project Card 5: Hanuman Chalisa -->
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/fca5a5/ffffff?text=Hanuman+Chalisa" alt="Hanuman Chalisa App" class="w-full h-56 object-cover">
+                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
+                        <img src="https://placehold.co/600x400/fca5a5/ffffff?text=Hanuman+Chalisa" alt="Hanuman Chalisa App" class="w-full h-56 object-cover" loading="lazy">
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-2">Hanuman Chalisa</h3>
                             <p class="text-gray-600 mb-4">A devotional app featuring the Hanuman Chalisa.</p>
@@ -329,8 +557,8 @@
                     </div>
 
                     <!-- Project Card 6: My Application (Placeholder) -->
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
-                        <img src="https://placehold.co/600x400/c4b5fd/ffffff?text=My+Application" alt="My Application" class="w-full h-56 object-cover">
+                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
+                        <img src="https://placehold.co/600x400/c4b5fd/ffffff?text=My+Application" alt="My Application" class="w-full h-56 object-cover" loading="lazy">
                         <div class="p-6">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-2">My Application</h3>
                             <p class="text-gray-600 mb-4">A general purpose application, showcasing various mobile development features.</p>
@@ -346,9 +574,78 @@
                 </div>
                 <!-- Button to view all apps -->
                 <div class="text-center mt-12 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                    <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="inline-block bg-blue-600 text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
+                    <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="inline-block btn-primary text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg">
                         View All My Apps on Google Play <i class="fab fa-google-play ml-2"></i>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Journey Section -->
+        <section id="my-journey" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Journey</h2>
+
+            <div class="opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
+                <div class="timeline-container relative max-w-3xl mx-auto">
+                    <!-- Experience Entries -->
+                    <div class="timeline-item flex items-start">
+                        <div class="timeline-marker flex-shrink-0"></div>
+                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                            <h4 class="text-xl font-semibold text-gray-800">Senior Engineer</h4>
+                            <p class="text-lg text-gray-700">VOLANSYS (An ACL Digital Company) · Full-time</p>
+                            <p class="duration text-sm text-gray-500">Apr 2023 - Present · 2 yrs 4 mos</p>
+                            <p class="text-sm text-gray-600">Ahmedabad, Gujarat, India</p>
+                            <p class="text-md text-gray-600 mt-2">Specialized in Application Programming Interfaces (API), User Experience (UX), and more.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex items-start">
+                        <div class="timeline-marker flex-shrink-0"></div>
+                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                            <h4 class="text-xl font-semibold text-gray-800">Engineer</h4>
+                            <p class="text-lg text-gray-700">VOLANSYS (An ACL Digital Company) · Full-time</p>
+                            <p class="duration text-sm text-gray-500">Oct 2021 - Jul 2023 · 1 yr 10 mos</p>
+                            <p class="text-sm text-gray-600">Ahmedabad, Gujarat, India</p>
+                            <p class="text-md text-gray-600 mt-2">Focused on User Experience (UX) and Front-End Development.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex items-start">
+                        <div class="timeline-marker flex-shrink-0"></div>
+                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                            <h4 class="text-xl font-semibold text-gray-800">Android Developer | Flutter Developer</h4>
+                            <p class="text-lg text-gray-700">Light Link Solutions · Full-time</p>
+                            <p class="duration text-sm text-gray-500">Oct 2019 - Oct 2021 · 2 yrs 1 mo</p>
+                            <p class="text-sm text-gray-600">Rajkot, Gujarat, India</p>
+                            <p class="text-md text-gray-600 mt-2">Primarily involved in Front-End Development for mobile applications.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex items-start">
+                        <div class="timeline-marker flex-shrink-0"></div>
+                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                            <h4 class="text-xl font-semibold text-gray-800">Flutter Developer | Android Developer</h4>
+                            <p class="text-lg text-gray-700">Ally Soft Solutions · Full-time</p>
+                            <p class="duration text-sm text-gray-500">Dec 2018 - Oct 2019 · 11 mos</p>
+                            <p class="text-sm text-gray-600">Rajkot, Gujarat, India</p>
+                            <p class="text-md text-gray-600 mt-2">Contributed to Front-End Development.</p>
+                        </div>
+                    </div>
+
+                    <!-- Education Entries -->
+                    <div class="timeline-item flex items-start">
+                        <div class="timeline-marker flex-shrink-0"></div>
+                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                            <h4 class="text-xl font-semibold text-gray-800">Master of Computer Applications - MCA</h4>
+                            <p class="text-lg text-gray-700">RK University, Computer Science</p>
+                            <p class="duration text-sm text-gray-500">2017 - 2019</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex items-start">
+                        <div class="timeline-marker flex-shrink-0"></div>
+                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                            <h4 class="text-xl font-semibold text-gray-800">Bachelor's degree, Computer Science</h4>
+                            <p class="text-lg text-gray-700">KAMANI SCIENCE & PRATAPRAI ARTS COLLEGE-AMRELI</p>
+                            <p class="duration text-sm text-gray-500">2014 - 2017</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -358,7 +655,7 @@
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Services</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                 <!-- Service Card 1 -->
-                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
                     <div class="text-blue-600 mb-6">
                         <i class="fas fa-mobile-alt text-5xl"></i>
                     </div>
@@ -369,7 +666,7 @@
                 </div>
 
                 <!-- Service Card 2 -->
-                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
                     <div class="text-blue-600 mb-6">
                         <i class="fas fa-palette text-5xl"></i>
                     </div>
@@ -380,7 +677,7 @@
                 </div>
 
                 <!-- Service Card 3 -->
-                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
                     <div class="text-blue-600 mb-6">
                         <i class="fas fa-code-branch text-5xl"></i>
                     </div>
@@ -391,7 +688,7 @@
                 </div>
 
                 <!-- Service Card 4 -->
-                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
                     <div class="text-blue-600 mb-6">
                         <i class="fas fa-sync-alt text-5xl"></i>
                     </div>
@@ -402,7 +699,7 @@
                 </div>
 
                 <!-- Service Card 5 -->
-                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
                     <div class="text-blue-600 mb-6">
                         <i class="fas fa-cloud-upload-alt text-5xl"></i>
                     </div>
@@ -413,7 +710,7 @@
                 </div>
 
                 <!-- Service Card 6 -->
-                <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
                     <div class="text-blue-600 mb-6">
                         <i class="fas fa-chalkboard-teacher text-5xl"></i>
                     </div>
@@ -521,7 +818,7 @@
                             <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Tell me about your project or inquiry..." required></textarea>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="bg-blue-600 text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
+                            <button type="submit" class="btn-primary text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg">
                                 Send Message <i class="fas fa-paper-plane ml-2"></i>
                             </button>
                         </div>
@@ -546,6 +843,7 @@
                 <ul class="flex space-x-6">
                     <li><a href="#about" class="text-gray-300 hover:text-white transition duration-300">About</a></li>
                     <li><a href="#portfolio" class="text-gray-300 hover:text-white transition duration-300">Projects</a></li>
+                    <li><a href="#my-journey" class="text-gray-300 hover:text-white transition duration-300">My Journey</a></li>
                     <li><a href="#services" class="text-gray-300 hover:text-white transition duration-300">Services</a></li>
                     <li><a href="#reviews" class="text-gray-300 hover:text-white transition duration-300">Reviews</a></li>
                     <li><a href="#contact" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
@@ -560,7 +858,8 @@
                 <a href="mailto:jadavmohit86@gmail.com" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fas fa-envelope"></i></a>
                 <a href="https://wa.me/919724430736" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <p class="text-gray-400 text-sm">&copy; 2025 Mohit Jadav. All rights reserved.</p>
+            <p class="text-gray-400 text-sm mb-2">&copy; 2025 Mohit Jadav. All rights reserved.</p>
+            <p class="text-gray-400 text-sm">Made with Gemini</p>
         </div>
     </footer>
 
@@ -708,6 +1007,51 @@
         animateOnScrollElements.forEach(element => {
             observer.observe(element);
         });
+
+        // Dynamic Header Blending Logic
+        const mainHeader = document.getElementById('main-header');
+        const siteLogo = document.getElementById('site-logo');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // Adjust this threshold as needed
+                mainHeader.classList.add('header-scrolled');
+                // Change logo and nav links to dark text
+                siteLogo.classList.remove('text-white');
+                siteLogo.classList.add('text-blue-600', 'hover:text-blue-700');
+                mobileMenuBtn.classList.remove('text-white');
+                mobileMenuBtn.classList.add('text-gray-700', 'hover:text-blue-600');
+                navLinks.forEach(link => {
+                    link.classList.remove('text-white');
+                    link.classList.add('text-gray-700', 'hover:text-blue-600');
+                });
+            } else {
+                mainHeader.classList.remove('header-scrolled');
+                // Change logo and nav links back to white text
+                siteLogo.classList.remove('text-blue-600', 'hover:text-blue-700');
+                siteLogo.classList.add('text-white');
+                mobileMenuBtn.classList.remove('text-gray-700', 'hover:text-blue-600');
+                mobileMenuBtn.classList.add('text-white');
+                navLinks.forEach(link => {
+                    link.classList.remove('text-gray-700', 'hover:text-blue-600');
+                    link.classList.add('text-white');
+                });
+            }
+        });
+
+        // Ensure header state is correct on initial load (e.g., if page is refreshed mid-scroll)
+        window.dispatchEvent(new Event('scroll'));
+
+        // Parallax effect for Hero SVG background
+        const heroSvgBg = document.querySelector('.hero-svg-bg');
+        if (heroSvgBg) {
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                // Adjust the parallax speed by changing the division factor
+                heroSvgBg.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+            });
+        }
     </script>
 </body>
 </html>
