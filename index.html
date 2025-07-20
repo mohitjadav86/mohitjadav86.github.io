@@ -37,21 +37,13 @@
         html {
             scroll-behavior: smooth;
         }
-        /* Hide scrollbar for slider container */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
         /* Custom styles for review slider to ensure proper snapping and overflow */
         .review-slider-wrapper {
             position: relative;
         }
         .review-slider {
             display: flex;
-            overflow-x: hidden; /* Hide scrollbar */
+            overflow-x: hidden; /* Hide scrollbar for slider */
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
         }
@@ -95,6 +87,13 @@
             .review-nav-btn.right {
                 right: 0.5rem;
             }
+        }
+
+        /* Preloader fade out and pointer-events fix */
+        #preloader.opacity-0 {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none; /* Ensure clicks pass through when fading out */
         }
     </style>
 </head>
@@ -203,32 +202,38 @@
         <section id="about" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">About Me</h2>
             <div class="flex flex-col items-center">
-                <div class="w-full">
+                <div class="w-full opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                     <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        Hello! I'm Mohit Jadav, a passionate mobile application developer with expertise in building robust and user-friendly experiences for Android, iOS, and cross-platform using Flutter. I love bringing ideas to life through clean code and intuitive design.
+                        I’m Mohit Jadav, a Flutter and IoT developer from Ahmedabad with 5+ years of experience turning ideas into polished, real-world apps. I enjoy crafting clean, cross-platform mobile apps, connecting hardware with software through IoT, and exploring creative tools like single-player games built with Flutter Flame.
                     </p>
                     <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        My journey in mobile development has equipped me with a strong understanding of native development principles (Kotlin for Android, Swift for iOS) and the efficiency of Flutter for rapid cross-platform deployment. I am committed to continuous learning and staying updated with the latest mobile technologies.
+                        My work spans everything from designing smooth UI/UX and custom animations, to backend APIs, cloud storage with Cloudflare R2/D1, and automating workflows using shell scripts. I care about writing modular, scalable code and delivering apps that feel reliable, modern, and user-friendly.
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Beyond just coding, I’m driven by curiosity: always learning, experimenting, and pushing my skills to build better digital products — whether for clients, the Play Store, or my own projects.
                     </p>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Skills:</h3>
                     <div class="flex flex-wrap gap-4 mb-8">
                         <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fab fa-android mr-2"></i>Android (Kotlin/Java)
+                            <i class="fas fa-mobile-alt mr-2"></i>Flutter & Dart (cross-platform apps)
                         </span>
                         <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fab fa-apple mr-2"></i>iOS (Swift/Objective-C)
+                            <i class="fas fa-wifi mr-2"></i>IoT integration (Bluetooth, Wi-Fi, sensors)
                         </span>
                         <span class="bg-teal-100 text-teal-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-mobile-alt mr-2"></i>Flutter (Dart)
+                            <i class="fas fa-database mr-2"></i>Backend development (PHP, SQL, REST APIs, Cloudflare R2/D1)
                         </span>
                         <span class="bg-red-100 text-red-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-database mr-2"></i>Firebase
+                            <i class="fas fa-paint-brush mr-2"></i>UI/UX design & custom animations
                         </span>
                         <span class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-cloud mr-2"></i>REST APIs
+                            <i class="fas fa-gamepad mr-2"></i>Game development with Flutter Flame
                         </span>
                         <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-paint-brush mr-2"></i>UI/UX Design
+                            <i class="fas fa-terminal mr-2"></i>Shell scripting & workflow automation (macOS)
+                        </span>
+                        <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
+                            <i class="fab fa-git-alt mr-2"></i>Git & GitHub Actions (version control & CI/CD)
                         </span>
                     </div>
                     <a href="https://mohitjadav86.github.io/resume/MohitJadav_Flutter.pdf" target="_blank" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
@@ -242,7 +247,7 @@
         <section id="portfolio" class="bg-gray-50 px-6 py-16 md:py-24 rounded-t-3xl">
             <div class="container mx-auto">
                 <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                     <!-- Project Card 1: Kids Learn Hub -->
                     <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out overflow-hidden">
                         <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Kids+Learn+Hub" alt="Kids Learn Hub App" class="w-full h-56 object-cover">
@@ -340,7 +345,7 @@
                     </div>
                 </div>
                 <!-- Button to view all apps -->
-                <div class="text-center mt-12">
+                <div class="text-center mt-12 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                     <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="inline-block bg-blue-600 text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
                         View All My Apps on Google Play <i class="fab fa-google-play ml-2"></i>
                     </a>
@@ -351,7 +356,7 @@
         <!-- Services Section -->
         <section id="services" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Services</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                 <!-- Service Card 1 -->
                 <div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center hover:shadow-xl transform hover:-translate-y-2 transition duration-300 ease-in-out">
                     <div class="text-blue-600 mb-6">
@@ -424,7 +429,7 @@
         <section id="reviews" class="bg-gray-50 px-6 py-16 md:py-24 rounded-t-3xl">
             <div class="container mx-auto relative">
                 <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Client Reviews</h2>
-                <div class="review-slider-wrapper max-w-3xl mx-auto">
+                <div class="review-slider-wrapper max-w-3xl mx-auto opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                     <!-- Slider Container -->
                     <div id="review-slider" class="review-slider rounded-xl shadow-lg">
                         <!-- Review Card 1 -->
@@ -497,7 +502,7 @@
         <section id="contact" class="bg-blue-50 px-6 py-16 md:py-24 rounded-t-3xl">
             <div class="container mx-auto">
                 <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Get in Touch</h2>
-                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg">
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
                     <form action="#" method="POST" class="space-y-6">
                         <div>
                             <label for="name" class="block text-gray-700 text-lg font-medium mb-2">Name</label>
@@ -680,6 +685,29 @@
         // Initialize slider and start auto-play
         showReview(0);
         startAutoPlay();
+
+        // Intersection Observer for scroll animations
+        const animateOnScrollElements = document.querySelectorAll('[data-animate-on-scroll]');
+
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, observerOptions);
+
+        animateOnScrollElements.forEach(element => {
+            observer.observe(element);
+        });
     </script>
 </body>
 </html>
