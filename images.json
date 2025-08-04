@@ -1,0 +1,22 @@
+{
+  "images": [
+    {
+      "id": 1,
+      "title": "Sunset over the mountains",
+      "url": "https://example.com/images/sunset.jpg",
+      "thumbnail": "https://example.com/images/sunset_thumb.jpg"
+    },
+    {
+      "id": 2,
+      "title": "City skyline at night",
+      "url": "https://example.com/images/city.jpg",
+      "thumbnail": "https://example.com/images/city_thumb.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Forest in the morning",
+      "url": "https://example.com/images/forest.jpg",
+      "thumbnail": "https://example.com/images/forest_thumb.jpg"
+    }
+  ]
+}
