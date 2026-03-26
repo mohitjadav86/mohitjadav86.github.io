@@ -3,1080 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohit Jadav - Mobile Developer Portfolio</title>
+    <meta name="theme-color" content="#0f172a"> <!-- Mobile Status Bar Color -->
+    <title>Mohit Jadav - Flutter & IoT Expert</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         /* Universal box-sizing for consistent layout */
         *, ::before, ::after {
             box-sizing: border-box;
         }
 
-        /* Chosen Palette: Warm Neutrals with Subtle Blue Accents */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Light background - slate-50 */
-            color: #334155; /* Dark grey text - slate-700 */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-        }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0; /* Light blue-gray track */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #3b82f6; /* Blue-600 */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2563eb; /* Blue-700 on hover */
-        }
-        /* Smooth scroll behavior */
-        html {
-            scroll-behavior: smooth;
-        }
-        /* Custom styles for review slider to ensure proper snapping and overflow */
-        .review-slider-wrapper {
-            position: relative;
-        }
-        .review-slider {
-            display: flex;
-            overflow-x: hidden; /* Hide scrollbar for slider */
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
-        }
-        .review-card {
-            flex: 0 0 100%; /* Each card takes full width */
-            scroll-snap-align: center;
-            box-sizing: border-box; /* Include padding in width calculation */
-        }
-        .review-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #3b82f6;
-            color: white;
-            padding: 0.75rem;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            z-index: 10;
-        }
-        .review-nav-btn:hover {
-            background-color: #2563eb;
-            transform: translateY(-50%) scale(1.05);
-        }
-        .review-nav-btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-        }
-        .review-nav-btn.left {
-            left: -1.5rem; /* Adjust positioning */
-        }
-        .review-nav-btn.right {
-            right: -1.5rem; /* Adjust positioning */
+            background-color: #f8fafc;
+            color: #334155;
+            overflow-x: hidden;
         }
 
-        /* Adjust button positioning for smaller screens */
-        @media (max-width: 768px) {
-            .review-nav-btn.left {
-                left: 0.5rem;
-            }
-            .review-nav-btn.right {
-                right: 0.5rem;
-            }
-        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
 
-        /* Preloader fade out and pointer-events fix */
-        #preloader.opacity-0 {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none; /* Ensure clicks pass through when fading out */
-        }
+        html { scroll-behavior: smooth; }
 
-        /* Header initial state (transparent) */
+        #preloader.opacity-0 { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        /* Modern Floating Header */
         header {
             background-color: transparent;
-            box-shadow: none;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            top: 0;
+            left: 0;
         }
 
-        /* Header scrolled state */
         header.header-scrolled {
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Tailwind shadow-md */
-            backdrop-filter: blur(8px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(8px); /* Safari support */
-        }
-
-        /* Adjust content padding to prevent it from being hidden by fixed header */
-        main {
-            padding-top: 0; /* Removed initial padding, hero section handles it */
-        }
-        /* No specific padding-top for main, as hero section covers initial viewport */
-
-        /* Modal styles (kept for static apps section, but not for AI idea generator) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            inset: 0; /* Ensures it covers the entire viewport */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-            display: flex; /* Use flex to center content */
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
-            padding: 1rem; /* Add padding to prevent content from touching edges on small screens */
-            z-index: 1000; /* Ensure it's above other content */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            padding: 2rem;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
-            width: 90%;
-            max-width: 600px;
-            position: relative; /* For positioning the close button */
-            display: flex; /* Use flex for internal layout */
-            flex-direction: column; /* Stack children vertically */
-            gap: 1.5rem; /* Consistent spacing between major elements */
-            min-height: 250px; /* Prevent modal from collapsing too much */
-            max-height: 90vh; /* Limit modal height to viewport */
-            overflow-y: auto; /* Enable scrolling within modal if content is too long */
-        }
-
-        .close-button {
-            color: #aaa;
-            position: absolute;
             top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0.5rem; /* Increase touch target */
+            width: 90%;
+            left: 5%;
+            border-radius: 2rem;
+            background-color: rgba(15, 23, 42, 0.85); /* Dark Slate Glass */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .close-button:hover,
-        .close-button:focus {
-            color: #333;
-            text-decoration: none;
-            cursor: pointer;
+        @media (max-width: 768px) {
+            header.header-scrolled {
+                width: 95%;
+                left: 2.5%;
+            }
         }
 
-        /* Styling for loading indicator */
-        #loadingIndicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.125rem; /* text-lg */
-            color: #3b82f6; /* blue-600 */
+        .project-card, .skill-tag {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .project-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        /* Custom styles for buttons with more flair */
-        .btn-primary {
-            background-image: linear-gradient(to right, #3b82f6 0%, #6366f1 100%); /* Blue to Indigo gradient */
-            transition: all 0.3s ease;
-            background-size: 200% auto; /* For hover effect */
-        }
-        .btn-primary:hover {
-            background-position: right center; /* Move gradient on hover */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
-            transform: translateY(-2px) scale(1.02); /* Slight lift and scale */
-        }
-        .btn-secondary {
-            border: 2px solid white;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background-color: white;
-            color: #3b82f6; /* Change text to blue on hover */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            transform: translateY(-2px) scale(1.02);
-        }
-
-        /* Card hover effects */
-        .project-card, .service-card {
-            transition: all 0.3s ease;
-            transform: translateY(0);
-        }
-        .project-card:hover, .service-card:hover {
-            transform: translateY(-8px); /* Lift effect */
-            box-shadow: 0 15px 25px rgba(0,0,0,0.15); /* Stronger shadow */
-        }
-
-        /* Hero section SVG background animation */
-        .hero-svg-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0; /* Behind content */
-            /* Add transform for parallax effect */
-            transform: translateZ(0); /* Ensure hardware acceleration */
-        }
-        .hero-svg-bg svg {
-            width: 100%;
-            height: 100%;
-            transform-origin: center center;
-            animation: moveSvg 20s infinite alternate ease-in-out; /* Slow, subtle movement */
-        }
-        .hero-svg-bg circle {
-            opacity: 0.1;
-            animation: fadeAndScale 15s infinite ease-in-out;
-        }
-        .hero-svg-bg circle:nth-child(2) { animation-delay: 2s; }
-        .hero-svg-bg circle:nth-child(3) { animation-delay: 4s; }
-        .hero-svg-bg circle:nth-child(4) { animation-delay: 6s; }
-
-        @keyframes moveSvg {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.05) translate(5%, 5%); }
-        }
-
-        @keyframes fadeAndScale {
-            0% { opacity: 0.1; transform: scale(0.8); }
-            50% { opacity: 0.25; transform: scale(1.1); }
-            100% { opacity: 0.1; transform: scale(0.8); }
-        }
-
-        /* Styling for My Journey section - Timeline */
-        .timeline-container {
-            position: relative;
-            padding: 2rem 0;
-        }
-
+        /* Timeline Styles */
+        .timeline-container { position: relative; padding: 2rem 0; }
         .timeline-container::before {
-            content: '';
-            position: absolute;
-            left: 1.25rem;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background-color: #e2e8f0;
+            content: ''; position: absolute; left: 1.25rem; top: 0; bottom: 0;
+            width: 2px; background: linear-gradient(to bottom, transparent, #3b82f6, transparent);
         }
+        @media (min-width: 768px) { .timeline-container::before { left: 50%; transform: translateX(-50%); } }
 
-        @media (min-width: 768px) {
-            .timeline-container::before {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 3rem;
-        }
-
+        .timeline-item { position: relative; margin-bottom: 4rem; }
         .timeline-marker {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 2.5rem;
-            height: 2.5rem;
-            background-color: #3b82f6;
-            border: 4px solid #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            z-index: 10;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: absolute; left: 0; top: 0; width: 2.5rem; height: 2.5rem;
+            background-color: #3b82f6; border: 4px solid #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: white;
+            z-index: 10; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
         }
-
-        @media (min-width: 768px) {
-            .timeline-marker {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
+        @media (min-width: 768px) { .timeline-marker { left: 50%; transform: translateX(-50%); } }
 
         .timeline-content {
-            margin-left: 3.5rem;
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #f1f5f9;
+            margin-left: 3.5rem; background-color: #ffffff; padding: 2rem;
+            border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease; border: 1px solid #f1f5f9;
         }
-
-        .timeline-content:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
+        .timeline-content:hover { transform: scale(1.02); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08); }
 
         @media (min-width: 768px) {
-            .timeline-item:nth-child(odd) .timeline-content {
-                margin-left: 0;
-                margin-right: calc(50% + 1.75rem);
-                text-align: right;
-            }
-            .timeline-item:nth-child(even) .timeline-content {
-                margin-left: calc(50% + 1.75rem);
-                margin-right: 0;
-                text-align: left;
-            }
+            .timeline-item:nth-child(odd) .timeline-content { margin-left: 0; margin-right: calc(50% + 2rem); text-align: right; }
+            .timeline-item:nth-child(even) .timeline-content { margin-left: calc(50% + 2rem); margin-right: 0; text-align: left; }
         }
 
-        .timeline-date {
-            display: inline-block;
-            background-color: #eff6ff;
-            color: #3b82f6;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-20px) rotate(0deg); }
+        }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        .shine-effect::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-25deg); animation: shine 4s infinite;
+        }
+
+        /* Mouse Follow Glow */
+        .glow-point {
+            width: 600px; height: 600px; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            position: fixed; pointer-events: none; z-index: 1; transform: translate(-50%, -50%);
+        }
+
+        .skill-tag:hover {
+            background-color: #3b82f6;
+            color: white;
+            transform: scale(1.1);
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased selection:bg-blue-200 selection:text-blue-900">
+
+    <div class="glow-point" id="mouseGlow"></div>
 
     <!-- Preloader -->
-    <div id="preloader" class="fixed inset-0 bg-white z-[9999] flex flex-col justify-center items-center">
-        <i class="fas fa-mobile-alt text-blue-600 text-6xl animate-bounce"></i>
-        <p class="mt-4 text-xl font-semibold text-gray-700">Loading Mohit Jadav's Portfolio...</p>
+    <div id="preloader" class="fixed inset-0 bg-slate-900 z-[9999] flex flex-col justify-center items-center">
+        <div class="relative w-24 h-24">
+            <div class="absolute inset-0 border-4 border-blue-500/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <i class="fas fa-mobile-alt absolute inset-0 flex items-center justify-center text-blue-500 text-3xl animate-pulse"></i>
+        </div>
+        <p class="mt-8 text-blue-100 font-mono tracking-widest uppercase text-sm animate-pulse">Initializing Environment...</p>
     </div>
 
-    <!-- Header / Navigation Bar -->
-    <header id="main-header" class="fixed w-full z-40 rounded-b-lg">
-        <nav class="container mx-auto flex justify-between items-center py-4 px-6 md:px-12">
-            <a id="site-logo" href="#" class="text-2xl font-bold text-white transition duration-300">Mohit Jadav</a>
+    <header id="main-header" class="fixed w-full z-40 transition-all duration-300">
+        <nav class="container mx-auto flex justify-between items-center py-6 px-6 md:px-12">
+            <a id="site-logo" href="#" class="text-2xl font-black text-white tracking-tighter hover:scale-105 transition duration-300">
+                MOHIT<span class="text-blue-500">.</span>JADAV
+            </a>
 
-            <!-- Desktop Navigation -->
-            <ul class="hidden md:flex space-x-8">
-                <li><a href="#home" class="nav-link text-white font-medium transition duration-300">Home</a></li>
-                <li><a href="#about" class="nav-link text-white font-medium transition duration-300">About</a></li>
-                <li><a href="#portfolio" class="nav-link text-white font-medium transition duration-300">Projects</a></li>
-                <li><a href="#my-journey" class="nav-link text-white font-medium transition duration-300">My Journey</a></li>
-                <li><a href="#services" class="nav-link text-white font-medium transition duration-300">Services</a></li>
-                <li><a href="#reviews" class="nav-link text-white font-medium transition duration-300">Reviews</a></li>
-                <li><a href="#contact" class="nav-link text-white font-medium transition duration-300">Contact</a></li>
+            <ul class="hidden md:flex space-x-10">
+                <li><a href="#home" class="nav-link text-white font-semibold hover:text-blue-400 transition-colors">Home</a></li>
+                <li><a href="#about" class="nav-link text-white font-semibold hover:text-blue-400 transition-colors">About</a></li>
+                <li><a href="#skills" class="nav-link text-white font-semibold hover:text-blue-400 transition-colors">Expertise</a></li>
+                <li><a href="#portfolio" class="nav-link text-white font-semibold hover:text-blue-400 transition-colors">Apps</a></li>
+                <li><a href="#my-journey" class="nav-link text-white font-semibold hover:text-blue-400 transition-colors">Journey</a></li>
+                <li><a href="#contact" class="px-6 py-2 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20">Let's Talk</a></li>
             </ul>
 
-            <!-- Mobile Hamburger Menu -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white focus:outline-none transition duration-300">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
+            <button id="mobile-menu-button" class="md:hidden text-white text-2xl"><i class="fas fa-bars"></i></button>
         </nav>
-
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="hidden fixed inset-0 bg-white bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-8 md:hidden">
-            <button id="close-mobile-menu-button" class="absolute top-6 right-6 text-gray-700 focus:outline-none">
-                <i class="fas fa-times text-3xl"></i>
-            </button>
-            <ul class="text-center text-2xl space-y-6">
-                <li><a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Home</a></li>
-                <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">About</a></li>
-                <li><a href="#portfolio" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Projects</a></li>
-                <li><a href="#my-journey" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">My Journey</a></li>
-                <li><a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Services</a></li>
-                <li><a href="#reviews" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Reviews</a></li>
-                <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300 mobile-nav-link">Contact</a></li>
-            </ul>
-        </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-slate-900/95 backdrop-blur-lg z-50 flex flex-col items-center justify-center space-y-10">
+        <button id="close-mobile-menu-button" class="absolute top-8 right-8 text-white text-3xl"><i class="fas fa-times"></i></button>
+        <ul class="text-center text-3xl font-bold space-y-8">
+            <li><a href="#home" class="text-white hover:text-blue-400 mobile-nav-link">Home</a></li>
+            <li><a href="#about" class="text-white hover:text-blue-400 mobile-nav-link">About</a></li>
+            <li><a href="#skills" class="text-white hover:text-blue-400 mobile-nav-link">Expertise</a></li>
+            <li><a href="#portfolio" class="text-white hover:text-blue-400 mobile-nav-link">Apps</a></li>
+            <li><a href="#my-journey" class="text-white hover:text-blue-400 mobile-nav-link">Journey</a></li>
+            <li><a href="#contact" class="text-white hover:text-blue-400 mobile-nav-link">Contact</a></li>
+        </ul>
+    </div>
 
     <main>
         <!-- Hero Section -->
-        <section id="home" class="relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-24 md:py-32 flex items-center justify-center min-h-screen rounded-b-3xl shadow-2xl shadow-blue-500/50">
-            <!-- Animated SVG Background -->
-            <div class="hero-svg-bg">
-                <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
-                    <circle cx="200" cy="150" r="80" fill="#ffffff" />
-                    <circle cx="1200" cy="300" r="120" fill="#ffffff" />
-                    <circle cx="500" cy="600" r="100" fill="#ffffff" />
-                    <circle cx="900" cy="100" r="60" fill="#ffffff" />
-                </svg>
+        <section id="home" class="relative bg-slate-950 text-white pt-48 pb-32 min-h-screen flex items-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
             </div>
-            <div class="container mx-auto px-6 text-center z-10">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-mobile-alt text-white text-6xl mb-6 animate-pulse"></i> <!-- Mobile Icon with pulse -->
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
-                        Mobile Developer
-                    </h1>
-                    <p class="text-xl md:text-2xl font-light mb-8 max-w-2xl text-gray-100">
-                        I specialize in crafting beautiful and functional user interfaces with Flutter. Explore my portfolio to see how I bring ideas to life.
-                    </p>
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="#portfolio" class="btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
-                            View Projects <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <a href="#contact" class="btn-secondary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
-                            Get in Touch <i class="fas fa-envelope ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- Social Media Icons -->
-                <div class="mt-12 flex justify-center space-x-6">
-                    <a href="https://github.com/mohitjadav86" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://stackoverflow.com/users/18340828/mohitjadav" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-stack-overflow"></i></a>
-                    <a href="https://pub.dev/packages/mohitjadav86" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fas fa-cube"></i></a>
-                    <a href="https://medium.com/@mohitjadav86" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-medium"></i></a>
-                    <a href="mailto:jadavmohit86@gmail.com" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fas fa-envelope"></i></a>
-                    <a href="https://wa.me/919724430736" target="_blank" class="text-white hover:text-gray-200 text-3xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-        </section>
 
-        <!-- About Me Section -->
-        <section id="about" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
-            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">About Me</h2>
-            <div class="flex flex-col items-center">
-                <div class="w-full opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        I’m Mohit Jadav, a Flutter and IoT developer from Ahmedabad with 5+ years of experience turning ideas into polished, real-world apps. I enjoy crafting clean, cross-platform mobile apps, connecting hardware with software through IoT, and exploring creative tools like single-player games built with Flutter Flame.
-                    </p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        My work spans everything from designing smooth UI/UX and custom animations, to backend APIs, cloud storage with Cloudflare R2/D1, and automating workflows using shell scripts. I care about writing modular, scalable code and delivering apps that feel reliable, modern, and user-friendly.
-                    </p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                        Beyond just coding, I’m driven by curiosity: always learning, experimenting, and pushing my skills to build better digital products — whether for clients, the Play Store, or my own projects.
-                    </p>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Skills:</h3>
-                    <div class="flex flex-wrap gap-4 mb-8">
-                        <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-mobile-alt mr-2"></i>Flutter & Dart (cross-platform apps)
-                        </span>
-                        <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-wifi mr-2"></i>IoT integration (Bluetooth, Wi-Fi, sensors)
-                        </span>
-                        <span class="bg-teal-100 text-teal-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-database mr-2"></i>Backend development (PHP, SQL, REST APIs, Cloudflare R2/D1)
-                        </span>
-                        <span class="bg-red-100 text-red-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-paint-brush mr-2"></i>UI/UX design & custom animations
-                        </span>
-                        <span class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-gamepad mr-2"></i>Game development with Flutter Flame
-                        </span>
-                        <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fas fa-terminal mr-2"></i>Shell scripting & workflow automation (macOS)
-                        </span>
-                        <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium text-sm shadow-sm">
-                            <i class="fab fa-git-alt mr-2"></i>Git & GitHub Actions (version control & CI/CD)
-                        </span>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div data-aos="fade-right" data-aos-duration="1000">
+                        <div class="inline-block px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-400 font-mono text-sm mb-6">
+                            <i class="fas fa-bolt mr-2 text-yellow-400"></i> status: available_for_collaboration
+                        </div>
+                        <h1 class="text-6xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter uppercase">
+                            FLUTTER <br> <span class="text-gradient">& IoT</span> <br> EXPERT<span class="text-blue-500">.</span>
+                        </h1>
+                        <p class="text-xl md:text-2xl text-slate-400 max-w-xl mb-12 font-light leading-relaxed">
+                            Senior Mobile Engineer at <span class="text-white font-medium">VOLANSYS (ACL Digital)</span>. <span class="experience-years-short">7+</span> years specializing in BLE, AWS MQTT, and connected device ecosystems.
+                        </p>
+                        <div class="flex flex-wrap gap-6">
+                            <a href="#portfolio" class="px-10 py-5 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] flex items-center group">
+                                Explore Apps <i class="fas fa-arrow-right ml-3 group-hover:translate-x-2 transition"></i>
+                            </a>
+                            <div class="flex items-center space-x-6">
+                                <a href="https://github.com/mohitjadav86" target="_blank" class="text-slate-400 hover:text-white text-2xl transition"><i class="fab fa-github"></i></a>
+                                <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-slate-400 hover:text-white text-2xl transition"><i class="fab fa-linkedin"></i></a>
+                            </div>
+                        </div>
                     </div>
-                    <a href="https://mohitjadav86.github.io/resume/MohitJadav_Flutter.pdf" target="_blank" class="inline-block btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
-                        Download CV <i class="fas fa-download ml-2"></i>
-                    </a>
+
+                    <div class="hidden lg:block relative" data-aos="zoom-in" data-aos-duration="1500">
+                        <div class="float-anim bg-slate-900/50 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-2xl relative overflow-hidden shine-effect">
+                            <div class="flex items-center space-x-2 mb-8">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span class="ml-4 text-slate-500 font-mono text-xs">Expertise.dart</span>
+                            </div>
+                            <pre class="font-mono text-blue-300 text-sm leading-relaxed">
+<span class="text-purple-400">final</span> <span class="text-yellow-400">skills</span> = {
+  <span class="text-green-400">'Mobile'</span>: [<span class="text-green-400">'Flutter'</span>, <span class="text-green-400">'Dart'</span>],
+  <span class="text-green-400">'IoT'</span>: [<span class="text-green-400">'BLE'</span>, <span class="text-green-400">'AWS MQTT'</span>, <span class="text-green-400">'WiFi'</span>],
+  <span class="text-green-400">'Backend'</span>: [<span class="text-green-400">'Firebase'</span>, <span class="text-green-400">'REST'</span>],
+  <span class="text-green-400">'Experience'</span>: <span class="text-orange-400">'<span class="experience-years-short">7+</span> Years'</span>,
+};</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Portfolio Section -->
-        <section id="portfolio" class="bg-gray-50 px-6 py-16 md:py-24 rounded-t-3xl">
-            <div class="container mx-auto">
-                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                    <!-- Project Card 1: Kids Learn Hub -->
-                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
-                        <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Kids+Learn+Hub" alt="Kids Learn Hub App" class="w-full h-56 object-cover" loading="lazy">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Kids Learn Hub</h3>
-                            <p class="text-gray-600 mb-4">An educational app designed to help kids learn through interactive activities.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-teal-100 text-teal-800 text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Educational</span>
-                            </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.kidslearnhub" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 2: Picture Puzzle -->
-                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
-                        <img src="https://placehold.co/600x400/fcd34d/ffffff?text=Picture+Puzzle" alt="Picture Puzzle App" class="w-full h-56 object-cover" loading="lazy">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Picture Puzzle</h3>
-                            <p class="text-gray-600 mb-4">A fun and engaging picture puzzle game for all ages.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Game</span>
-                            </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.picturepuzzle" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 3: Fonts App -->
-                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
-                        <img src="https://placehold.co/600x400/6ee7b7/ffffff?text=Fonts+App" alt="Fonts App" class="w-full h-56 object-cover" loading="lazy">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Fonts App</h3>
-                            <p class="text-gray-600 mb-4">An application providing a variety of fonts for creative use.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">Utility</span>
-                            </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.fonts.app.fontsapp" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 4: IPL 2020 -->
-                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
-                        <img src="https://placehold.co/600x400/93c5fd/ffffff?text=IPL+2020" alt="IPL 2020 App" class="w-full h-56 object-cover" loading="lazy">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">IPL 2020</h3>
-                            <p class="text-gray-600 mb-4">An app dedicated to the Indian Premier League 2020 season.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">Sports</span>
-                            </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.mohitjadav.ipl2020" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 5: Hanuman Chalisa -->
-                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
-                        <img src="https://placehold.co/600x400/fca5a5/ffffff?text=Hanuman+Chalisa" alt="Hanuman Chalisa App" class="w-full h-56 object-cover" loading="lazy">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">Hanuman Chalisa</h3>
-                            <p class="text-gray-600 mb-4">A devotional app featuring the Hanuman Chalisa.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Devotional</span>
-                            </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.kingkobra.hanumanchalisa" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 6: My Application (Placeholder) -->
-                    <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden">
-                        <img src="https://placehold.co/600x400/c4b5fd/ffffff?text=My+Application" alt="My Application" class="w-full h-56 object-cover" loading="lazy">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-2">My Application</h3>
-                            <p class="text-gray-600 mb-4">A general purpose application, showcasing various mobile development features.</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Android</span>
-                                <span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full">Utility</span>
-                            </div>
-                            <a href="https://play.google.com/store/apps/details?id=com.kingkobra.myapplication" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                View on Play Store <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                            </a>
-                        </div>
-                    </div>
+        <!-- Stats Bar -->
+        <section class="py-12 bg-white border-y border-slate-100">
+            <div class="container mx-auto px-6 grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
+                <div data-aos="fade-up">
+                    <h4 class="text-4xl font-black text-blue-600 mb-2 experience-years-short">7+</h4>
+                    <p class="text-slate-500 font-bold uppercase text-xs tracking-widest">Years Experience</p>
                 </div>
-                <!-- Button to view all apps -->
-                <div class="text-center mt-12 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                    <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="inline-block btn-primary text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg">
-                        View All My Apps on Google Play <i class="fab fa-google-play ml-2"></i>
-                    </a>
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-4xl font-black text-blue-600 mb-2">9+</h4>
+                    <p class="text-slate-500 font-bold uppercase text-xs tracking-widest">Live Company Apps</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-4xl font-black text-blue-600 mb-2">12+</h4>
+                    <p class="text-slate-500 font-bold uppercase text-xs tracking-widest">Personal Apps</p>
                 </div>
             </div>
         </section>
 
-        <!-- My Journey Section -->
-        <section id="my-journey" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
-            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Journey</h2>
+        <!-- About -->
+        <section id="about" class="py-32 bg-slate-50 overflow-hidden">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-24 items-center">
+                    <div class="relative" data-aos="fade-right">
+                        <div class="aspect-square bg-blue-600 rounded-[3rem] rotate-6 absolute inset-0 -z-10 opacity-10 scale-110"></div>
+                        <img src="https://placehold.co/600x600/3b82f6/ffffff?text=Mohit+Jadav" alt="Mohit" class="rounded-[3rem] shadow-2xl relative z-10 grayscale hover:grayscale-0 transition duration-700">
+                    </div>
+                    <div data-aos="fade-left">
+                        <h2 class="text-5xl font-black mb-8 tracking-tighter uppercase leading-[0.9]">BRIDGING <span class="text-blue-600">MOBILE</span> & <span class="text-blue-600">SMART HARDWARE.</span></h2>
+                        <p class="text-xl text-slate-600 mb-8 leading-relaxed">
+                            Based in Ahmedabad, I have <span class="font-bold text-blue-600" id="experience-full">7 years, 3 months, and 22 days</span> of professional software development experience. My focus isn't just on writing code—it's about creating <strong>seamless experiences</strong> that connect humans with technology.
+                        </p>
+                        <p class="text-lg text-slate-500 mb-8 leading-relaxed">
+                            My core strength lies in connecting mobile applications with smart hardware using <strong>BLE, Wi-Fi, and AWS MQTT</strong>, enabling real-time communication between users and connected systems.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4 mb-12">
+                            <div class="flex items-center space-x-3 text-slate-700">
+                                <i class="fas fa-check-circle text-blue-500"></i>
+                                <span class="font-bold">BLE Integration</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-slate-700">
+                                <i class="fas fa-check-circle text-blue-500"></i>
+                                <span class="font-bold">AWS Cognito/MQTT</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-slate-700">
+                                <i class="fas fa-check-circle text-blue-500"></i>
+                                <span class="font-bold">Payment Gateways</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-slate-700">
+                                <i class="fas fa-check-circle text-blue-500"></i>
+                                <span class="font-bold">Offline Sync (Hive)</span>
+                            </div>
+                        </div>
+                        <a href="https://mohitjadav86.github.io/resume/MohitJadav_Flutter.pdf" target="_blank" class="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition inline-block">DOWNLOAD CV</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            <div class="opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
+        <!-- Technical Expertise Grid -->
+        <section id="skills" class="py-32 bg-white">
+            <div class="container mx-auto px-6 text-center mb-24">
+                <span class="text-blue-600 font-mono tracking-widest uppercase text-sm mb-4 block">Capabilities</span>
+                <h2 class="text-6xl font-black tracking-tighter uppercase">TECHNICAL ARSENAL<span class="text-blue-500">.</span></h2>
+            </div>
+            <div class="container mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Mobile -->
+                <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100" data-aos="fade-up">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-black mb-4 uppercase">Mobile Dev</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Flutter</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Dart</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Android</span>
+                    </div>
+                </div>
+                <!-- IoT -->
+                <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="text-xl font-black mb-4 uppercase">IoT & Connectivity</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">BLE</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">MQTT</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">WiFi</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Sensor Apps</span>
+                    </div>
+                </div>
+                <!-- Cloud -->
+                <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3 class="text-xl font-black mb-4 uppercase">Cloud & Integration</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">AWS</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Firebase</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">REST APIs</span>
+                    </div>
+                </div>
+                <!-- Features -->
+                <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="text-xl font-black mb-4 uppercase">Features</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Payments</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">FCM/APNs</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Analytics</span>
+                        <span class="skill-tag px-3 py-1 bg-white rounded-lg text-sm font-bold shadow-sm">Monetization</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="portfolio" class="py-32 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-24">
+                    <div>
+                        <span class="text-blue-600 font-mono tracking-widest uppercase text-sm mb-4 block">Portfolio</span>
+                        <h2 class="text-6xl font-black tracking-tighter uppercase">APP LABORATORY<span class="text-blue-500">.</span></h2>
+                    </div>
+                    <a href="https://play.google.com/store/apps/dev?id=9141983238233022860" target="_blank" class="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition mt-8 md:mt-0">VIEW ON PLAY STORE</a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-12">
+                    <!-- Project 1 -->
+                    <div class="project-card group" data-aos="fade-up">
+                        <div class="relative h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl mb-8">
+                            <img src="https://placehold.co/600x800/a78bfa/ffffff?text=Kids+Learn+Hub" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" alt="Kids App">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
+                            <div class="absolute bottom-8 left-8">
+                                <span class="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Education</span>
+                                <h3 class="text-3xl font-black text-white uppercase">Kids Learn Hub</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card group" data-aos="fade-up" data-aos-delay="200">
+                        <div class="relative h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl mb-8">
+                            <img src="https://placehold.co/600x800/fcd34d/ffffff?text=Picture+Puzzle" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" alt="Puzzle App">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
+                            <div class="absolute bottom-8 left-8">
+                                <span class="bg-purple-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Gaming</span>
+                                <h3 class="text-3xl font-black text-white uppercase">Picture Puzzle</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card group" data-aos="fade-up" data-aos-delay="400">
+                        <div class="relative h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl mb-8">
+                            <img src="https://placehold.co/600x800/6ee7b7/ffffff?text=Fonts+App" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" alt="Utility App">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
+                            <div class="absolute bottom-8 left-8">
+                                <span class="bg-teal-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Utility</span>
+                                <h3 class="text-3xl font-black text-white uppercase">Fonts App</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Journey -->
+        <section id="my-journey" class="py-32 bg-slate-950 text-white overflow-hidden">
+            <div class="container mx-auto px-6">
+                <h2 class="text-6xl font-black text-center mb-24 tracking-tighter uppercase">PROFESSIONAL ARC<span class="text-blue-500">.</span></h2>
+                
                 <div class="timeline-container">
-                    <!-- Experience Entries -->
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <span class="timeline-date">Apr 2023 - Present</span>
-                            <h4 class="text-xl font-semibold text-gray-800">Senior Engineer</h4>
-                            <p class="text-lg text-blue-600 font-medium">VOLANSYS (An ACL Digital Company)</p>
-                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Ahmedabad, Gujarat, India</p>
-                            <p class="text-md text-gray-600">Specialized in Application Programming Interfaces (API), User Experience (UX), and high-performance mobile architectures.</p>
+                    <div class="timeline-item" data-aos="fade-right">
+                        <div class="timeline-marker"><i class="fas fa-briefcase"></i></div>
+                        <div class="timeline-content bg-white/5 backdrop-blur-lg border-white/10">
+                            <span class="timeline-date bg-blue-600 text-white tracking-widest uppercase">Oct 2021 - Present</span>
+                            <h4 class="text-2xl font-black text-white mb-2 uppercase">Flutter Developer (Senior)</h4>
+                            <p class="text-blue-400 font-bold mb-4 uppercase">VOLANSYS (ACL Digital)</p>
+                            <p class="text-slate-400">Ahmedabad. Specialized in developing IoT-enabled mobile apps, BLE integrations, and real-time data solutions using AWS MQTT.</p>
                         </div>
                     </div>
 
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <span class="timeline-date">Oct 2021 - Jul 2023</span>
-                            <h4 class="text-xl font-semibold text-gray-800">Engineer</h4>
-                            <p class="text-lg text-blue-600 font-medium">VOLANSYS (An ACL Digital Company)</p>
-                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Ahmedabad, Gujarat, India</p>
-                            <p class="text-md text-gray-600">Focused on User Experience (UX), Front-End Development, and IoT integration for enterprise solutions.</p>
+                    <div class="timeline-item" data-aos="fade-left">
+                        <div class="timeline-marker"><i class="fas fa-briefcase"></i></div>
+                        <div class="timeline-content bg-white/5 backdrop-blur-lg border-white/10">
+                            <span class="timeline-date bg-blue-600 text-white tracking-widest uppercase">Oct 2019 - Oct 2021</span>
+                            <h4 class="text-2xl font-black text-white mb-2 uppercase">Flutter Developer</h4>
+                            <p class="text-blue-400 font-bold mb-4 uppercase">Light Link Solutions</p>
+                            <p class="text-slate-400">Rajkot. Delivered production-ready apps across fintech, e-commerce, and HR management domains.</p>
                         </div>
                     </div>
 
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <span class="timeline-date">Oct 2019 - Oct 2021</span>
-                            <h4 class="text-xl font-semibold text-gray-800">Android & Flutter Developer</h4>
-                            <p class="text-lg text-blue-600 font-medium">Light Link Solutions</p>
-                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Rajkot, Gujarat, India</p>
-                            <p class="text-md text-gray-600">Lead developer for multiple client-facing mobile applications, focusing on clean architecture and smooth animations.</p>
+                    <div class="timeline-item" data-aos="fade-right">
+                        <div class="timeline-marker"><i class="fas fa-briefcase"></i></div>
+                        <div class="timeline-content bg-white/5 backdrop-blur-lg border-white/10">
+                            <span class="timeline-date bg-blue-600 text-white tracking-widest uppercase">Dec 2018 - Oct 2019</span>
+                            <h4 class="text-2xl font-black text-white mb-2 uppercase">Flutter Developer</h4>
+                            <p class="text-blue-400 font-bold mb-4 uppercase">Ally Soft Solutions</p>
+                            <p class="text-slate-400">Rajkot. Early adopter of Flutter, building cross-platform utilities and media tools.</p>
                         </div>
                     </div>
 
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <span class="timeline-date">Dec 2018 - Oct 2019</span>
-                            <h4 class="text-xl font-semibold text-gray-800">Flutter Developer</h4>
-                            <p class="text-lg text-blue-600 font-medium">Ally Soft Solutions</p>
-                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Rajkot, Gujarat, India</p>
-                            <p class="text-md text-gray-600">Early adopter of Flutter, building cross-platform apps and exploring reactive programming patterns.</p>
+                    <div class="timeline-item" data-aos="fade-left">
+                        <div class="timeline-marker"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="timeline-content bg-white/5 backdrop-blur-lg border-white/10">
+                            <span class="timeline-date bg-blue-600 text-white tracking-widest uppercase">2017 - 2019</span>
+                            <h4 class="text-2xl font-black text-white mb-2 uppercase">Master of Computer Applications</h4>
+                            <p class="text-blue-400 font-bold mb-4 uppercase">RK University</p>
+                            <p class="text-slate-400">Mastered advanced computer science concepts and software engineering principles.</p>
                         </div>
                     </div>
 
-                    <!-- Education Entries -->
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <span class="timeline-date">2017 - 2019</span>
-                            <h4 class="text-xl font-semibold text-gray-800">Master of Computer Applications</h4>
-                            <p class="text-lg text-blue-600 font-medium">RK University</p>
-                            <p class="text-md text-gray-600">Specialized in Computer Science and Software Engineering principles.</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <span class="timeline-date">2014 - 2017</span>
-                            <h4 class="text-xl font-semibold text-gray-800">Bachelor of Computer Science</h4>
-                            <p class="text-lg text-blue-600 font-medium">Kamani Science & Prataprai Arts College</p>
-                            <p class="text-md text-gray-600">Foundational studies in programming, algorithms, and database management.</p>
+                    <div class="timeline-item" data-aos="fade-right">
+                        <div class="timeline-marker"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="timeline-content bg-white/5 backdrop-blur-lg border-white/10">
+                            <span class="timeline-date bg-blue-600 text-white tracking-widest uppercase">2014 - 2017</span>
+                            <h4 class="text-2xl font-black text-white mb-2 uppercase">Bachelor of Computer Science</h4>
+                            <p class="text-blue-400 font-bold mb-4 uppercase">KAMANI SCIENCE & PRATAPRAI ARTS COLLEGE</p>
+                            <p class="text-slate-400">Foundational studies in programming, algorithms, and database systems.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Services Section -->
-        <section id="services" class="container mx-auto px-6 py-16 md:py-24 bg-white rounded-xl shadow-lg mt-8">
-            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Services</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                <!-- Service Card 1 -->
-                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
-                    <div class="text-blue-600 mb-6">
-                        <i class="fas fa-mobile-alt text-5xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">Custom Mobile App Development</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Building bespoke Android, iOS, and cross-platform (Flutter) applications from concept to deployment, tailored to your unique business needs.
-                    </p>
-                </div>
-
-                <!-- Service Card 2 -->
-                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
-                    <div class="text-blue-600 mb-6">
-                        <i class="fas fa-palette text-5xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">UI/UX Design & Prototyping</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Creating intuitive, engaging, and visually appealing user interfaces and experiences, ensuring a delightful journey for your app users.
-                    </p>
-                </div>
-
-                <!-- Service Card 3 -->
-                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
-                    <div class="text-blue-600 mb-6">
-                        <i class="fas fa-code-branch text-5xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">App Maintenance & Optimization</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Providing ongoing support, performance optimization, bug fixing, and feature enhancements to keep your applications running smoothly.
-                    </p>
-                </div>
-
-                <!-- Service Card 4 -->
-                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
-                    <div class="text-blue-600 mb-6">
-                        <i class="fas fa-sync-alt text-5xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">Legacy App Modernization</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Updating and migrating older mobile applications to modern frameworks like Flutter or the latest native versions for improved performance.
-                    </p>
-                </div>
-
-                <!-- Service Card 5 -->
-                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
-                    <div class="text-blue-600 mb-6">
-                        <i class="fas fa-cloud-upload-alt text-5xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">API Integration & Backend Support</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Seamless integration with various APIs and providing robust backend support using technologies like Firebase for scalable applications.
-                    </p>
-                </div>
-
-                <!-- Service Card 6 -->
-                <div class="service-card bg-gray-100 rounded-xl shadow-lg p-8 text-center">
-                    <div class="text-blue-600 mb-6">
-                        <i class="fas fa-chalkboard-teacher text-5xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">Technical Consultation</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Offering expert advice on mobile technology stack, architecture, and best practices to guide your project's success.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Reviews Section -->
-        <section id="reviews" class="bg-gray-50 px-6 py-16 md:py-24 rounded-t-3xl">
-            <div class="container mx-auto relative">
-                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Client Reviews</h2>
-                <div class="review-slider-wrapper max-w-3xl mx-auto opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                    <!-- Slider Container -->
-                    <div id="review-slider" class="review-slider rounded-xl shadow-lg">
-                        <!-- Review Card 1 -->
-                        <div class="review-card bg-white p-8 md:p-12 text-center">
-                            <div class="mb-6">
-                                <i class="fas fa-quote-left text-blue-400 text-3xl mb-4"></i>
-                                <p class="text-xl text-gray-700 italic leading-relaxed">
-                                    "Mohit delivered exceptional work on our attendance management app. His attention to detail, technical expertise, and responsiveness were truly impressive. He's a highly skilled developer who understood our requirements perfectly and brought our vision to life."
-                                </p>
-                                <i class="fas fa-quote-right text-blue-400 text-3xl mt-4"></i>
-                            </div>
-                            <div class="mt-8">
-                                <p class="text-lg font-semibold text-blue-600">- Mohit Jadav</p>
-                                <p class="text-md text-gray-600">Developer, Prowin Attendance App</p>
-                                <a href="https://www.freelancer.in/u/bagiyachirag587" target="_blank" class="inline-block mt-4 text-blue-600 hover:underline font-medium">
-                                    View Mohit Jadav Freelancer Profile <i class="fas fa-external-link-alt ml-1 text-sm"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Review Card 2 (Example - Add more as needed) -->
-                        <div class="review-card bg-white p-8 md:p-12 text-center">
-                            <div class="mb-6">
-                                <i class="fas fa-quote-left text-blue-400 text-3xl mb-4"></i>
-                                <p class="text-xl text-gray-700 italic leading-relaxed">
-                                    "Mohit is an excellent mobile developer. He quickly grasped our complex requirements and delivered a high-quality application on time and within budget. Highly recommend his services!"
-                                </p>
-                                <i class="fas fa-quote-right text-blue-400 text-3xl mt-4"></i>
-                            </div>
-                            <div class="mt-8">
-                                <p class="text-lg font-semibold text-blue-600">- Another Satisfied Client</p>
-                                <p class="text-md text-gray-600">CEO, Tech Solutions Inc.</p>
-                                <a href="#" target="_blank" class="inline-block mt-4 text-blue-600 hover:underline font-medium">
-                                    Learn More <i class="fas fa-external-link-alt ml-1 text-sm"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Review Card 3 (Example - Add more as needed) -->
-                        <div class="review-card bg-white p-8 md:p-12 text-center">
-                            <div class="mb-6">
-                                <i class="fas fa-quote-left text-blue-400 text-3xl mb-4"></i>
-                                <p class="text-xl text-gray-700 italic leading-relaxed">
-                                    "Working with Mohit was a pleasure. His expertise in Flutter allowed us to launch our app quickly and efficiently. The performance and design are top-notch!"
-                                </p>
-                                <i class="fas fa-quote-right text-blue-400 text-3xl mt-4"></i>
-                            </div>
-                            <div class="mt-8">
-                                <p class="text-lg font-semibold text-blue-600">- Happy Business Owner</p>
-                                <p class="text-md text-gray-600">Founder, Innovate Apps</p>
-                                <a href="#" target="_blank" class="inline-block mt-4 text-blue-600 hover:underline font-medium">
-                                    View Project <i class="fas fa-external-link-alt ml-1 text-sm"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slider Navigation Buttons -->
-                    <button id="prev-review" class="review-nav-btn left">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button id="next-review" class="review-nav-btn right">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="bg-blue-50 px-6 py-16 md:py-24 rounded-t-3xl">
-            <div class="container mx-auto">
-                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Get in Touch</h2>
-                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                    <form action="#" method="POST" class="space-y-6">
-                        <div>
-                            <label for="name" class="block text-gray-700 text-lg font-medium mb-2">Name</label>
-                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Your Name" required>
-                        </div>
-                        <div>
-                            <label for="email" class="block text-gray-700 text-lg font-medium mb-2">Email</label>
-                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="your.email@example.com" required>
-                        </div>
-                        <div>
-                            <label for="subject" class="block text-gray-700 text-lg font-medium mb-2">Subject</label>
-                            <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Project Inquiry, Collaboration, etc." required>
-                        </div>
-                        <div>
-                            <label for="message" class="block text-gray-700 text-lg font-medium mb-2">Message</label>
-                            <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Tell me about your project or inquiry..." required></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn-primary text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg">
-                                Send Message <i class="fas fa-paper-plane ml-2"></i>
-                            </button>
-                        </div>
-                    </form>
-                    <div class="mt-10 text-center text-gray-700">
-                        <p class="text-lg mb-2">Prefer to connect directly?</p>
-                        <p class="text-xl font-semibold mb-2"><i class="fas fa-envelope mr-2"></i> <a href="mailto:jadavmohit86@gmail.com" class="text-blue-600 hover:underline">jadavmohit86@gmail.com</a></p>
-                        <p class="text-xl font-semibold"><i class="fab fa-whatsapp mr-2"></i> <a href="https://wa.me/919724430736" target="_blank" class="text-blue-600 hover:underline">+91 9724430736</a></p>
+        <!-- Contact -->
+        <section id="contact" class="py-32 bg-slate-900 text-white relative overflow-hidden">
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <div data-aos="fade-up">
+                    <h2 class="text-7xl md:text-9xl font-black mb-12 tracking-tighter uppercase leading-[0.8]">Let's Connect<span class="text-blue-600">.</span></h2>
+                    <p class="text-2xl text-slate-400 mb-16 max-w-2xl mx-auto uppercase">Available for consulting on IoT connectivity, Flutter architecture, and custom mobile solutions.</p>
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-12">
+                        <a href="mailto:jadavmohit86@gmail.com" class="text-3xl font-black hover:text-blue-500 transition">jadavmohit86@gmail.com</a>
+                        <a href="https://wa.me/919724430736" target="_blank" class="px-10 py-5 bg-green-500 text-white rounded-2xl font-black text-xl hover:bg-green-600 transition shadow-2xl shadow-green-500/20 uppercase">WHATSAPP ME</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 px-6 text-center rounded-t-lg">
-        <div class="container mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-                <div class="mb-4 md:mb-0">
-                    <a href="#" class="text-2xl font-bold text-white hover:text-gray-300 transition duration-300">Mohit Jadav</a>
-                </div>
-                <ul class="flex space-x-6">
-                    <li><a href="#about" class="text-gray-300 hover:text-white transition duration-300">About</a></li>
-                    <li><a href="#portfolio" class="text-gray-300 hover:text-white transition duration-300">Projects</a></li>
-                    <li><a href="#my-journey" class="text-gray-300 hover:text-white transition duration-300">My Journey</a></li>
-                    <li><a href="#services" class="text-gray-300 hover:text-white transition duration-300">Services</a></li>
-                    <li><a href="#reviews" class="text-gray-300 hover:text-white transition duration-300">Reviews</a></li>
-                    <li><a href="#contact" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
-                </ul>
+    <footer class="py-12 bg-slate-950 text-slate-500 text-center">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center space-x-12 mb-8">
+                <a href="https://github.com/mohitjadav86" target="_blank" class="hover:text-white transition text-xl"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="hover:text-white transition text-xl"><i class="fab fa-linkedin"></i></a>
+                <a href="https://medium.com/@mohitjadav86" target="_blank" class="hover:text-white transition text-xl"><i class="fab fa-medium"></i></a>
             </div>
-            <div class="flex justify-center space-x-6 mb-6">
-                <a href="https://github.com/mohitjadav86" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/mohitjadav86/" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-linkedin"></i></a>
-                <a href="https://stackoverflow.com/users/18340828/mohitjadav" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-stack-overflow"></i></a>
-                <a href="https://pub.dev/packages/mohitjadav86" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fas fa-cube"></i></a>
-                <a href="https://medium.com/@mohitjadav86" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-medium"></i></a>
-                <a href="mailto:jadavmohit86@gmail.com" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fas fa-envelope"></i></a>
-                <a href="https://wa.me/919724430736" target="_blank" class="text-gray-300 hover:text-white text-2xl transition duration-300"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <p class="text-gray-400 text-sm mb-2">&copy; 2025 Mohit Jadav. All rights reserved.</p>
-            <p class="text-gray-400 text-sm">Made with Gemini</p>
+            <p class="font-mono text-xs uppercase tracking-widest">&copy; 2025 Mohit Jadav // Built with passion & Gemini</p>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn" class="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out z-50">
-        <i class="fas fa-arrow-up text-xl"></i>
+    <button id="scrollToTopBtn" class="fixed bottom-12 right-12 w-16 h-16 bg-blue-600 text-white rounded-full shadow-[0_0_30px_rgba(59,130,246,0.5)] hidden z-50 hover:scale-110 transition active:scale-95">
+        <i class="fas fa-arrow-up"></i>
     </button>
 
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // JavaScript for Preloader
+        // Initialize AOS
+        AOS.init({ once: true, offset: 50 });
+
+        // Preloader
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
-            if (preloader) {
-                preloader.classList.add('opacity-0'); // Start fade out
-                preloader.addEventListener('transitionend', () => {
-                    preloader.style.display = 'none'; // Hide after transition
-                }, { once: true }); // Ensure listener runs only once
-            }
+            preloader.classList.add('opacity-0');
+            setTimeout(() => preloader.style.display = 'none', 600);
         });
 
-        // JavaScript for Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const closeMobileMenuButton = document.getElementById('close-mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.remove('hidden');
+        // Mouse Glow
+        const mouseGlow = document.getElementById('mouseGlow');
+        document.addEventListener('mousemove', (e) => {
+            mouseGlow.style.left = e.clientX + 'px';
+            mouseGlow.style.top = e.clientY + 'px';
         });
 
-        closeMobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-        });
+        // Experience Counter
+        function updateExperience() {
+            const startDate = new Date('2017-02-01'); // Original start date
+            const volansysStartDate = new Date('2021-10-01');
+            const now = new Date();
 
-        // Close mobile menu when a link is clicked
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
+            function getDiff(start, end) {
+                let years = end.getFullYear() - start.getFullYear();
+                let months = end.getMonth() - start.getMonth();
+                let days = end.getDate() - start.getDate();
 
-        // JavaScript for Scroll to Top Button
-        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) { // Show button after scrolling down 300px
-                scrollToTopBtn.classList.remove('hidden');
-            } else {
-                scrollToTopBtn.classList.add('hidden');
-            }
-        });
-
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // JavaScript for Reviews Slider
-        const reviewSlider = document.getElementById('review-slider');
-        const prevReviewBtn = document.getElementById('prev-review');
-        const nextReviewBtn = document.getElementById('next-review');
-        const reviewCards = reviewSlider.querySelectorAll('.review-card');
-
-        let currentIndex = 0;
-        const autoPlayInterval = 5000; // 5 seconds
-        let autoPlayTimer;
-
-        // Function to show a specific review
-        function showReview(index) {
-            if (index >= reviewCards.length) {
-                currentIndex = 0;
-            } else if (index < 0) {
-                currentIndex = reviewCards.length - 1;
-            } else {
-                currentIndex = index;
-            }
-            reviewSlider.scrollTo({
-                left: reviewCards[currentIndex].offsetWidth * currentIndex,
-                behavior: 'smooth'
-            });
-        }
-
-        // Function to start auto-play
-        function startAutoPlay() {
-            autoPlayTimer = setInterval(nextReview, autoPlayInterval);
-        }
-
-        // Function to stop auto-play
-        function stopAutoPlay() {
-            clearInterval(autoPlayTimer);
-        }
-
-        // Function to show the next review
-        function nextReview() {
-            showReview(currentIndex + 1);
-        }
-
-        // Function to show the previous review
-        function prevReview() {
-            showReview(currentIndex - 1);
-        }
-
-        // Event listeners for navigation buttons
-        nextReviewBtn.addEventListener('click', () => {
-            stopAutoPlay(); // Stop auto-play on manual interaction
-            nextReview();
-            startAutoPlay(); // Restart auto-play after a short delay
-        });
-
-        prevReviewBtn.addEventListener('click', () => {
-            stopAutoPlay(); // Stop auto-play on manual interaction
-            prevReview();
-            startAutoPlay(); // Restart auto-play after a short delay
-        });
-
-        // Pause auto-play on user interaction (hover)
-        reviewSlider.addEventListener('mouseover', stopAutoPlay);
-        reviewSlider.addEventListener('mouseleave', startAutoPlay);
-
-        // Initialize slider and start auto-play
-        showReview(0);
-        startAutoPlay();
-
-        // Intersection Observer for scroll animations
-        const animateOnScrollElements = document.querySelectorAll('[data-animate-on-scroll]');
-
-        const observerOptions = {
-            root: null, // viewport
-            rootMargin: '0px',
-            threshold: 0.1 // Trigger when 10% of the element is visible
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.remove('opacity-0', 'translate-y-10');
-                    entry.target.classList.add('opacity-100', 'translate-y-0');
-                    observer.unobserve(entry.target); // Stop observing once animated
+                if (days < 0) {
+                    months--;
+                    const lastMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                    days += lastMonth.getDate();
                 }
-            });
-        }, observerOptions);
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                return { years, months, days };
+            }
 
-        animateOnScrollElements.forEach(element => {
-            observer.observe(element);
-        });
+            const total = getDiff(startDate, now);
+            const volansys = getDiff(volansysStartDate, now);
 
-        // Dynamic Header Blending Logic
-        const mainHeader = document.getElementById('main-header');
-        const siteLogo = document.getElementById('site-logo');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            // Update DOM
+            const shortExpElements = document.querySelectorAll('.experience-years-short');
+            shortExpElements.forEach(el => el.innerText = total.years + '+');
 
+            const fullExpElement = document.getElementById('experience-full');
+            if (fullExpElement) {
+                fullExpElement.innerText = `${total.years} years, ${total.months} months, and ${total.days} days`;
+            }
+
+            const volansysElement = document.getElementById('years-volansys');
+            if (volansysElement) {
+                volansysElement.innerText = volansys.years + '+';
+            }
+        }
+
+        updateExperience();
+        // Update every 24 hours
+        setInterval(updateExperience, 1000 * 60 * 60 * 24);
+
+        // Header Scroll
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // Adjust this threshold as needed
-                mainHeader.classList.add('header-scrolled');
-                // Change logo and nav links to dark text
-                siteLogo.classList.remove('text-white');
-                siteLogo.classList.add('text-blue-600', 'hover:text-blue-700');
-                mobileMenuBtn.classList.remove('text-white');
-                mobileMenuBtn.classList.add('text-gray-700', 'hover:text-blue-600');
-                navLinks.forEach(link => {
-                    link.classList.remove('text-white');
-                    link.classList.add('text-gray-700', 'hover:text-blue-600');
-                });
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
             } else {
-                mainHeader.classList.remove('header-scrolled');
-                // Change logo and nav links back to white text
-                siteLogo.classList.remove('text-blue-600', 'hover:text-blue-700');
-                siteLogo.classList.add('text-white');
-                mobileMenuBtn.classList.remove('text-gray-700', 'hover:text-blue-600');
-                mobileMenuBtn.classList.add('text-white');
-                navLinks.forEach(link => {
-                    link.classList.remove('text-gray-700', 'hover:text-blue-600');
-                    link.classList.add('text-white');
-                });
+                header.classList.remove('header-scrolled');
             }
         });
 
-        // Ensure header state is correct on initial load (e.g., if page is refreshed mid-scroll)
-        window.dispatchEvent(new Event('scroll'));
+        // Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu-button');
+        const closeBtn = document.getElementById('close-mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
 
-        // Parallax effect for Hero SVG background
-        const heroSvgBg = document.querySelector('.hero-svg-bg');
-        if (heroSvgBg) {
-            window.addEventListener('scroll', () => {
-                const scrollPosition = window.pageYOffset;
-                // Adjust the parallax speed by changing the division factor
-                heroSvgBg.style.transform = `translateY(${scrollPosition * 0.3}px)`;
-            });
-        }
+        menuBtn.addEventListener('click', () => menu.classList.remove('hidden'));
+        closeBtn.addEventListener('click', () => menu.classList.add('hidden'));
+        document.querySelectorAll('.mobile-nav-link').forEach(l => {
+            l.addEventListener('click', () => menu.classList.add('hidden'));
+        });
+
+        // Scroll to Top
+        const scrollBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) scrollBtn.classList.remove('hidden');
+            else scrollBtn.classList.add('hidden');
+        });
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     </script>
 </body>
 </html>
