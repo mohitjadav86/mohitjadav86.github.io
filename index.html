@@ -251,86 +251,93 @@
 
         /* Styling for My Journey section - Timeline */
         .timeline-container {
-            padding-left: 2rem; /* Space for the vertical line */
+            position: relative;
+            padding: 2rem 0;
         }
 
         .timeline-container::before {
             content: '';
             position: absolute;
-            left: calc(1rem - 2px); /* Position the line in the middle of the marker */
+            left: 1.25rem;
             top: 0;
             bottom: 0;
-            width: 4px;
-            background-color: #3b82f6; /* Blue line */
-            border-radius: 2px;
+            width: 2px;
+            background-color: #e2e8f0;
+        }
+
+        @media (min-width: 768px) {
+            .timeline-container::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
 
         .timeline-item {
             position: relative;
-            padding-left: 2.5rem; /* Space for marker and content */
-            margin-bottom: 2rem; /* Spacing between items */
-        }
-
-        .timeline-item:last-child {
-            margin-bottom: 0; /* No bottom margin for the last item */
+            margin-bottom: 3rem;
         }
 
         .timeline-marker {
             position: absolute;
-            left: calc(1rem - 10px); /* Position the marker on the line */
-            top: 0.75rem; /* Vertically align with content */
-            width: 20px;
-            height: 20px;
-            background-color: #3b82f6; /* Blue marker */
-            border: 3px solid #ffffff; /* White border for contrast */
+            left: 0;
+            top: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: #3b82f6;
+            border: 4px solid #fff;
             border-radius: 50%;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Subtle glow */
-            z-index: 1; /* Ensure marker is above the line */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 10;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .timeline-marker {
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
 
         .timeline-content {
-            flex-grow: 1;
-            background-color: #f0f4f8; /* Light blue-gray */
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-left: 3.5rem;
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #f1f5f9;
         }
 
         .timeline-content:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .timeline-content h4 {
-            font-weight: 600; /* semibold */
-            color: #1e293b; /* slate-900 */
+        @media (min-width: 768px) {
+            .timeline-item:nth-child(odd) .timeline-content {
+                margin-left: 0;
+                margin-right: calc(50% + 1.75rem);
+                text-align: right;
+            }
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: calc(50% + 1.75rem);
+                margin-right: 0;
+                text-align: left;
+            }
         }
 
-        .timeline-content p {
-            color: #475569; /* slate-600 */
-        }
-
-        .timeline-content .duration {
-            font-size: 0.875rem; /* text-sm */
-            color: #64748b; /* slate-500 */
-            margin-top: 0.25rem;
-        }
-
-        /* Adjust for smaller screens if needed, though the flex-column and max-width should handle it */
-        @media (max-width: 768px) {
-            .timeline-container {
-                padding-left: 1.5rem; /* Adjust padding for smaller screens */
-            }
-            .timeline-container::before {
-                left: calc(0.75rem - 2px); /* Adjust line position */
-            }
-            .timeline-item {
-                padding-left: 2rem; /* Adjust item padding */
-            }
-            .timeline-marker {
-                left: calc(0.75rem - 10px); /* Adjust marker position */
-                top: 0.5rem; /* Adjust marker vertical alignment */
-            }
+        .timeline-date {
+            display: inline-block;
+            background-color: #eff6ff;
+            color: #3b82f6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
         }
     </style>
 </head>
@@ -586,64 +593,82 @@
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">My Journey</h2>
 
             <div class="opacity-0 translate-y-10 transition-all duration-1000 ease-out" data-animate-on-scroll>
-                <div class="timeline-container relative max-w-3xl mx-auto">
+                <div class="timeline-container">
                     <!-- Experience Entries -->
-                    <div class="timeline-item flex items-start">
-                        <div class="timeline-marker flex-shrink-0"></div>
-                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Apr 2023 - Present</span>
                             <h4 class="text-xl font-semibold text-gray-800">Senior Engineer</h4>
-                            <p class="text-lg text-gray-700">VOLANSYS (An ACL Digital Company) · Full-time</p>
-                            <p class="duration text-sm text-gray-500">Apr 2023 - Present · 2 yrs 4 mos</p>
-                            <p class="text-sm text-gray-600">Ahmedabad, Gujarat, India</p>
-                            <p class="text-md text-gray-600 mt-2">Specialized in Application Programming Interfaces (API), User Experience (UX), and more.</p>
+                            <p class="text-lg text-blue-600 font-medium">VOLANSYS (An ACL Digital Company)</p>
+                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Ahmedabad, Gujarat, India</p>
+                            <p class="text-md text-gray-600">Specialized in Application Programming Interfaces (API), User Experience (UX), and high-performance mobile architectures.</p>
                         </div>
                     </div>
-                    <div class="timeline-item flex items-start">
-                        <div class="timeline-marker flex-shrink-0"></div>
-                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Oct 2021 - Jul 2023</span>
                             <h4 class="text-xl font-semibold text-gray-800">Engineer</h4>
-                            <p class="text-lg text-gray-700">VOLANSYS (An ACL Digital Company) · Full-time</p>
-                            <p class="duration text-sm text-gray-500">Oct 2021 - Jul 2023 · 1 yr 10 mos</p>
-                            <p class="text-sm text-gray-600">Ahmedabad, Gujarat, India</p>
-                            <p class="text-md text-gray-600 mt-2">Focused on User Experience (UX) and Front-End Development.</p>
+                            <p class="text-lg text-blue-600 font-medium">VOLANSYS (An ACL Digital Company)</p>
+                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Ahmedabad, Gujarat, India</p>
+                            <p class="text-md text-gray-600">Focused on User Experience (UX), Front-End Development, and IoT integration for enterprise solutions.</p>
                         </div>
                     </div>
-                    <div class="timeline-item flex items-start">
-                        <div class="timeline-marker flex-shrink-0"></div>
-                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
-                            <h4 class="text-xl font-semibold text-gray-800">Android Developer | Flutter Developer</h4>
-                            <p class="text-lg text-gray-700">Light Link Solutions · Full-time</p>
-                            <p class="duration text-sm text-gray-500">Oct 2019 - Oct 2021 · 2 yrs 1 mo</p>
-                            <p class="text-sm text-gray-600">Rajkot, Gujarat, India</p>
-                            <p class="text-md text-gray-600 mt-2">Primarily involved in Front-End Development for mobile applications.</p>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Oct 2019 - Oct 2021</span>
+                            <h4 class="text-xl font-semibold text-gray-800">Android & Flutter Developer</h4>
+                            <p class="text-lg text-blue-600 font-medium">Light Link Solutions</p>
+                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Rajkot, Gujarat, India</p>
+                            <p class="text-md text-gray-600">Lead developer for multiple client-facing mobile applications, focusing on clean architecture and smooth animations.</p>
                         </div>
                     </div>
-                    <div class="timeline-item flex items-start">
-                        <div class="timeline-marker flex-shrink-0"></div>
-                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
-                            <h4 class="text-xl font-semibold text-gray-800">Flutter Developer | Android Developer</h4>
-                            <p class="text-lg text-gray-700">Ally Soft Solutions · Full-time</p>
-                            <p class="duration text-sm text-gray-500">Dec 2018 - Oct 2019 · 11 mos</p>
-                            <p class="text-sm text-gray-600">Rajkot, Gujarat, India</p>
-                            <p class="text-md text-gray-600 mt-2">Contributed to Front-End Development.</p>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Dec 2018 - Oct 2019</span>
+                            <h4 class="text-xl font-semibold text-gray-800">Flutter Developer</h4>
+                            <p class="text-lg text-blue-600 font-medium">Ally Soft Solutions</p>
+                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Rajkot, Gujarat, India</p>
+                            <p class="text-md text-gray-600">Early adopter of Flutter, building cross-platform apps and exploring reactive programming patterns.</p>
                         </div>
                     </div>
 
                     <!-- Education Entries -->
-                    <div class="timeline-item flex items-start">
-                        <div class="timeline-marker flex-shrink-0"></div>
-                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
-                            <h4 class="text-xl font-semibold text-gray-800">Master of Computer Applications - MCA</h4>
-                            <p class="text-lg text-gray-700">RK University, Computer Science</p>
-                            <p class="duration text-sm text-gray-500">2017 - 2019</p>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2017 - 2019</span>
+                            <h4 class="text-xl font-semibold text-gray-800">Master of Computer Applications</h4>
+                            <p class="text-lg text-blue-600 font-medium">RK University</p>
+                            <p class="text-md text-gray-600">Specialized in Computer Science and Software Engineering principles.</p>
                         </div>
                     </div>
-                    <div class="timeline-item flex items-start">
-                        <div class="timeline-marker flex-shrink-0"></div>
-                        <div class="timeline-content bg-gray-100 p-6 rounded-lg shadow-md flex-grow">
-                            <h4 class="text-xl font-semibold text-gray-800">Bachelor's degree, Computer Science</h4>
-                            <p class="text-lg text-gray-700">KAMANI SCIENCE & PRATAPRAI ARTS COLLEGE-AMRELI</p>
-                            <p class="duration text-sm text-gray-500">2014 - 2017</p>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2014 - 2017</span>
+                            <h4 class="text-xl font-semibold text-gray-800">Bachelor of Computer Science</h4>
+                            <p class="text-lg text-blue-600 font-medium">Kamani Science & Prataprai Arts College</p>
+                            <p class="text-md text-gray-600">Foundational studies in programming, algorithms, and database management.</p>
                         </div>
                     </div>
                 </div>
